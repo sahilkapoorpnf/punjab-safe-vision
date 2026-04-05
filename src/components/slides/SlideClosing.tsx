@@ -1,11 +1,20 @@
 import { Shield, Mail, Globe, Phone } from "lucide-react";
 import SlideLayout from "./SlideLayout";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
+import heroCover from "@/assets/hero-cover.jpg";
 
 export default function SlideClosing() {
   return (
-    <SlideLayout dark className="slide-gradient-navy flex items-center justify-center">
-      <div className="text-center space-y-10 max-w-4xl mx-auto">
+    <SlideLayout dark className="slide-gradient-navy flex items-center justify-center relative overflow-hidden">
+      <img src={heroCover} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+      <div className="slide-hero-overlay-dark" />
+      <div className="absolute inset-0 grid-pattern-dark" />
+
+      <div className="glow-orb w-80 h-80 bg-trust-blue -top-20 right-20" />
+      <div className="glow-orb w-64 h-64 bg-primary bottom-10 -left-20 animate-pulse-glow" />
+      <div className="glow-orb w-40 h-40 bg-success top-1/2 right-1/3" style={{ animationDelay: "3s" }} />
+
+      <div className="text-center space-y-10 max-w-4xl mx-auto relative z-10">
         <Shield className="w-16 h-16 mx-auto opacity-40" />
 
         <h2 className="slide-title text-3xl md:text-4xl lg:text-5xl leading-tight">

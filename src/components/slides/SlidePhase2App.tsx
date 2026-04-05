@@ -3,8 +3,12 @@ import SlideLayout from "./SlideLayout";
 
 export default function SlidePhase2App() {
   return (
-    <SlideLayout>
-      <div className="space-y-8">
+    <SlideLayout className="relative overflow-hidden">
+      <div className="absolute inset-0 grid-pattern" />
+      <div className="glow-orb w-48 h-48 bg-gold top-20 right-0 opacity-10" />
+      <div className="floating-shape w-16 h-16 bg-primary bottom-32 left-20" style={{ animationDelay: "3s" }} />
+
+      <div className="space-y-8 relative z-10">
         <div>
           <span className="badge-pill badge-gold mb-4">Phase 2 — Citizen App v2</span>
           <h2 className="slide-title text-3xl md:text-4xl text-foreground mt-4">
@@ -47,7 +51,7 @@ export default function SlidePhase2App() {
               </div>
             </div>
             <p className="text-sm font-semibold text-foreground">Smart Safety Alerts</p>
-            <p className="text-xs text-muted-foreground text-center">Real-time zone alerts & safety status pushed to citizens</p>
+            <p className="text-xs text-muted-foreground text-center">Real-time zone alerts & safety status</p>
           </div>
 
           {/* Screen 2: Community Impact */}
@@ -56,7 +60,7 @@ export default function SlidePhase2App() {
               <div className="mockup-phone-screen p-4 flex flex-col">
                 <p className="font-bold text-sm text-foreground mb-3">Community Impact</p>
                 <div className="text-center space-y-2 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mx-auto shadow-lg shadow-primary/20">
                     <Shield className="w-7 h-7 text-primary" />
                   </div>
                   <p className="font-bold text-foreground text-sm">Your Contribution</p>
@@ -98,7 +102,7 @@ export default function SlidePhase2App() {
               </div>
             </div>
             <p className="text-sm font-semibold text-foreground">Community Impact</p>
-            <p className="text-xs text-muted-foreground text-center">Track personal impact and contributions to the mission</p>
+            <p className="text-xs text-muted-foreground text-center">Track personal impact and contributions</p>
           </div>
 
           {/* Screen 3: Area Safety Map */}
@@ -106,7 +110,6 @@ export default function SlidePhase2App() {
             <div className="mockup-phone">
               <div className="mockup-phone-screen p-3 flex flex-col">
                 <p className="font-bold text-sm text-foreground mb-2">Area Safety Map</p>
-                {/* Map area */}
                 <div className="relative flex-1 rounded-xl bg-secondary overflow-hidden mb-3" style={{ minHeight: "220px" }}>
                   <div className="absolute inset-0 opacity-20">
                     <div className="grid grid-cols-6 grid-rows-6 h-full w-full gap-px">
@@ -115,16 +118,13 @@ export default function SlidePhase2App() {
                       ))}
                     </div>
                   </div>
-                  {/* Hotspot markers */}
                   <div className="heatmap-dot heatmap-red w-10 h-10" style={{ top: "20%", left: "30%" }} />
                   <div className="heatmap-dot heatmap-yellow w-8 h-8" style={{ top: "50%", left: "60%" }} />
                   <div className="heatmap-dot heatmap-green w-8 h-8" style={{ top: "70%", left: "25%" }} />
                   <div className="heatmap-dot heatmap-red w-6 h-6" style={{ top: "35%", left: "70%" }} />
                   <div className="heatmap-dot heatmap-green w-10 h-10" style={{ top: "60%", left: "45%" }} />
-                  {/* User location */}
                   <div className="absolute w-4 h-4 rounded-full bg-primary border-2 border-primary-foreground shadow-lg" style={{ top: "45%", left: "40%" }} />
                 </div>
-                {/* Legend */}
                 <div className="flex items-center justify-center gap-4 mb-2">
                   {[
                     { color: "bg-accent", label: "High Risk" },
@@ -138,7 +138,7 @@ export default function SlidePhase2App() {
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-[9px] font-bold">
+                  <button className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-[9px] font-bold shadow-sm">
                     <TrendingUp className="w-3 h-3 inline mr-1" />Report Here
                   </button>
                   <button className="flex-1 py-2 rounded-lg bg-secondary text-foreground text-[9px] font-bold">
@@ -148,7 +148,7 @@ export default function SlidePhase2App() {
               </div>
             </div>
             <p className="text-sm font-semibold text-foreground">Area Safety Map</p>
-            <p className="text-xs text-muted-foreground text-center">Live heatmap showing zone safety levels near the citizen</p>
+            <p className="text-xs text-muted-foreground text-center">Live heatmap with zone safety levels</p>
           </div>
         </div>
       </div>

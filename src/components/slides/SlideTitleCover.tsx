@@ -1,11 +1,24 @@
 import { Shield, Eye, Users } from "lucide-react";
 import SlideLayout from "./SlideLayout";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
+import heroCover from "@/assets/hero-cover.jpg";
 
 export default function SlideTitleCover() {
   return (
-    <SlideLayout dark className="slide-gradient-navy flex items-center justify-center">
-      <div className="text-center space-y-8">
+    <SlideLayout dark className="slide-gradient-navy flex items-center justify-center relative overflow-hidden">
+      {/* Background image */}
+      <img src={heroCover} alt="" className="slide-hero-image-full opacity-30" />
+      <div className="slide-hero-overlay-dark" />
+
+      {/* Grid pattern */}
+      <div className="absolute inset-0 grid-pattern-dark" />
+
+      {/* Floating orbs */}
+      <div className="glow-orb w-96 h-96 bg-primary -top-20 -right-20" />
+      <div className="glow-orb w-72 h-72 bg-accent bottom-20 -left-20 animate-pulse-glow" />
+      <div className="glow-orb w-48 h-48 bg-trust-blue top-1/3 right-1/4" style={{ animationDelay: "2s" }} />
+
+      <div className="text-center space-y-8 relative z-10">
         <div className="inline-flex items-center gap-2 badge-pill bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/20">
           <Shield className="w-4 h-4" />
           Government of Punjab Initiative

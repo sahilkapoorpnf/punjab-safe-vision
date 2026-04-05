@@ -3,8 +3,11 @@ import SlideLayout from "./SlideLayout";
 
 export default function SlidePhase2Dashboard() {
   return (
-    <SlideLayout>
-      <div className="space-y-8">
+    <SlideLayout className="relative overflow-hidden">
+      <div className="absolute inset-0 grid-pattern" />
+      <div className="glow-orb w-48 h-48 bg-primary top-10 right-0 opacity-10" />
+
+      <div className="space-y-8 relative z-10">
         <div>
           <span className="badge-pill badge-blue mb-4">Phase 2 — Command Center</span>
           <h2 className="slide-title text-3xl md:text-4xl text-foreground mt-4">
@@ -35,7 +38,7 @@ export default function SlidePhase2Dashboard() {
                 { icon: Users, label: "Active Officers", value: "156", change: "92% response rate", color: "text-success" },
                 { icon: Activity, label: "AI Alerts Today", value: "47", change: "18 high priority", color: "text-gold" },
               ].map((s, i) => (
-                <div key={i} className="stat-card !p-4 space-y-2">
+                <div key={i} className="stat-card-hover !p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <s.icon className={`w-5 h-5 ${s.color}`} />
                     <TrendingUp className="w-3 h-3 text-success" />
@@ -69,7 +72,7 @@ export default function SlidePhase2Dashboard() {
                   ].map((d, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[8px] font-bold text-foreground">{d.cases}</span>
-                      <div className="w-full rounded-t-md bg-primary/80" style={{ height: d.h }} />
+                      <div className="w-full rounded-t-md bg-primary/80 transition-all hover:bg-primary" style={{ height: d.h }} />
                       <span className="text-[7px] text-muted-foreground truncate w-full text-center">{d.name}</span>
                     </div>
                   ))}
@@ -109,7 +112,7 @@ export default function SlidePhase2Dashboard() {
                 <div className="flex items-end gap-2 h-20">
                   {[40, 55, 48, 72, 65, 80, 75, 90, 85, 78, 92, 88].map((v, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                      <div className="w-full rounded-sm bg-trust-blue/60" style={{ height: `${v}%` }} />
+                      <div className="w-full rounded-sm bg-trust-blue/60 hover:bg-trust-blue/80 transition-colors" style={{ height: `${v}%` }} />
                       <span className="text-[6px] text-muted-foreground">{["J","F","M","A","M","J","J","A","S","O","N","D"][i]}</span>
                     </div>
                   ))}
@@ -130,7 +133,7 @@ export default function SlidePhase2Dashboard() {
                         <span className="font-bold text-foreground">{c.pct}%</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-secondary">
-                        <div className={`h-full rounded-full ${c.color}`} style={{ width: `${c.pct}%` }} />
+                        <div className={`h-full rounded-full ${c.color} transition-all`} style={{ width: `${c.pct}%` }} />
                       </div>
                     </div>
                   ))}

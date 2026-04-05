@@ -1,10 +1,14 @@
-import { MapPin, List, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
+import { MapPin, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import SlideLayout from "./SlideLayout";
+import heroLudhiana from "@/assets/hero-ludhiana.jpg";
 
 export default function SlidePhase1Dashboard() {
   return (
-    <SlideLayout>
-      <div className="space-y-8">
+    <SlideLayout className="relative overflow-hidden">
+      <div className="absolute inset-0 grid-pattern" />
+      <div className="floating-shape w-16 h-16 bg-trust-blue top-32 right-8" style={{ animationDelay: "2s" }} />
+
+      <div className="space-y-8 relative z-10">
         <div>
           <span className="badge-pill badge-blue mb-4">Phase 1 — Admin Dashboard</span>
           <h2 className="slide-title text-3xl md:text-4xl text-foreground mt-4">
@@ -28,21 +32,24 @@ export default function SlidePhase1Dashboard() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-0">
-            {/* Map area */}
-            <div className="md:col-span-2 p-6 border-r border-border relative min-h-[320px] bg-secondary/20">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-                Live Heatmap — Ludhiana
-              </p>
-              <div className="relative w-full h-56 rounded-xl bg-secondary/50 overflow-hidden">
-                <div className="heatmap-dot heatmap-red w-12 h-12" style={{ top: "20%", left: "30%" }} />
-                <div className="heatmap-dot heatmap-red w-16 h-16" style={{ top: "45%", left: "55%" }} />
-                <div className="heatmap-dot heatmap-yellow w-10 h-10" style={{ top: "60%", left: "25%" }} />
-                <div className="heatmap-dot heatmap-yellow w-8 h-8" style={{ top: "30%", left: "70%" }} />
-                <div className="heatmap-dot heatmap-green w-8 h-8" style={{ top: "75%", left: "65%" }} />
-                {/* Pins */}
-                <MapPin className="absolute w-4 h-4 text-accent" style={{ top: "22%", left: "32%" }} />
-                <MapPin className="absolute w-4 h-4 text-accent" style={{ top: "47%", left: "57%" }} />
-                <MapPin className="absolute w-4 h-4 text-gold" style={{ top: "62%", left: "27%" }} />
+            {/* Map area with real image */}
+            <div className="md:col-span-2 border-r border-border relative min-h-[320px] overflow-hidden">
+              <img src={heroLudhiana} alt="Ludhiana map view" className="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-b from-card/40 to-card/60" />
+              <div className="relative p-6">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                  Live Heatmap — Ludhiana
+                </p>
+                <div className="relative w-full h-56 rounded-xl bg-secondary/30 backdrop-blur-sm overflow-hidden border border-border">
+                  <div className="heatmap-dot heatmap-red w-12 h-12" style={{ top: "20%", left: "30%" }} />
+                  <div className="heatmap-dot heatmap-red w-16 h-16" style={{ top: "45%", left: "55%" }} />
+                  <div className="heatmap-dot heatmap-yellow w-10 h-10" style={{ top: "60%", left: "25%" }} />
+                  <div className="heatmap-dot heatmap-yellow w-8 h-8" style={{ top: "30%", left: "70%" }} />
+                  <div className="heatmap-dot heatmap-green w-8 h-8" style={{ top: "75%", left: "65%" }} />
+                  <MapPin className="absolute w-4 h-4 text-accent" style={{ top: "22%", left: "32%" }} />
+                  <MapPin className="absolute w-4 h-4 text-accent" style={{ top: "47%", left: "57%" }} />
+                  <MapPin className="absolute w-4 h-4 text-gold" style={{ top: "62%", left: "27%" }} />
+                </div>
               </div>
             </div>
 
@@ -58,7 +65,7 @@ export default function SlidePhase1Dashboard() {
                 { id: "RPT-5009", cat: "Drug Selling", status: "New", icon: AlertTriangle, color: "text-accent" },
                 { id: "RPT-5008", cat: "Suspicious", status: "Assigned", icon: Clock, color: "text-gold" },
               ].map((c, i) => (
-                <div key={i} className="p-3 rounded-lg bg-secondary/50 border border-border flex items-center justify-between text-xs">
+                <div key={i} className="p-3 rounded-lg bg-secondary/50 border border-border flex items-center justify-between text-xs hover:bg-secondary/80 transition-colors">
                   <div className="flex items-center gap-2">
                     <c.icon className={`w-3.5 h-3.5 ${c.color}`} />
                     <div>

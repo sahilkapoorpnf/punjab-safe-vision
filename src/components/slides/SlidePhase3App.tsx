@@ -1,10 +1,16 @@
 import { Shield, Bell, MapPin, Award, Flame, TrendingUp } from "lucide-react";
 import SlideLayout from "./SlideLayout";
+import heroPunjabMap from "@/assets/hero-punjab-map.jpg";
 
 export default function SlidePhase3App() {
   return (
-    <SlideLayout dark className="slide-gradient-navy">
-      <div className="space-y-8">
+    <SlideLayout dark className="slide-gradient-navy relative overflow-hidden">
+      <img src={heroPunjabMap} alt="" className="absolute inset-0 w-full h-full object-cover opacity-10" />
+      <div className="absolute inset-0 grid-pattern-dark" />
+      <div className="glow-orb w-64 h-64 bg-primary top-0 right-0" />
+      <div className="glow-orb w-48 h-48 bg-trust-blue bottom-20 left-10 animate-pulse-glow" />
+
+      <div className="space-y-8 relative z-10">
         <div>
           <span className="badge-pill bg-primary-foreground/15 text-primary-foreground border border-primary-foreground/20 mb-4">
             Phase 3 — Citizen App v3
@@ -56,7 +62,7 @@ export default function SlidePhase3App() {
                 </div>
 
                 <div className="mt-auto pt-3">
-                  <button className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-[10px] font-bold">
+                  <button className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-[10px] font-bold shadow-lg shadow-primary/20">
                     🚨 Report Anonymously
                   </button>
                 </div>
@@ -106,14 +112,14 @@ export default function SlidePhase3App() {
                   </div>
                 </div>
 
-                <button className="w-full py-2.5 rounded-xl bg-accent text-accent-foreground text-[10px] font-bold mt-auto">
+                <button className="w-full py-2.5 rounded-xl bg-accent text-accent-foreground text-[10px] font-bold mt-auto shadow-lg shadow-accent/20">
                   Submit Secure Report →
                 </button>
                 <p className="text-[7px] text-center text-muted-foreground mt-1">🔒 End-to-end encrypted • Fully anonymous</p>
               </div>
             </div>
             <p className="text-sm font-semibold">AI-Assisted Reporting</p>
-            <p className="text-xs opacity-60 text-center">Enhanced categories, evidence types, and AI analysis</p>
+            <p className="text-xs opacity-60 text-center">Enhanced categories & AI analysis</p>
           </div>
 
           {/* Screen 3: Rewards & Recognition */}
@@ -123,7 +129,7 @@ export default function SlidePhase3App() {
                 <p className="font-bold text-sm text-foreground mb-3">Rewards Hub</p>
 
                 <div className="text-center mb-3">
-                  <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center mx-auto mb-2 shadow-lg shadow-gold/20">
                     <Award className="w-7 h-7 text-gold" />
                   </div>
                   <p className="font-bold text-foreground text-sm">Punjab Hero — Level 5</p>
@@ -136,9 +142,9 @@ export default function SlidePhase3App() {
 
                 <p className="text-[9px] font-bold text-muted-foreground uppercase mb-2">Unlocked Rewards</p>
                 {[
-                  { icon: "🏆", title: "CM Recognition Certificate", desc: "Verified contributor", unlocked: true },
-                  { icon: "🎖️", title: "District Guardian Badge", desc: "50+ verified reports", unlocked: true },
-                  { icon: "⭐", title: "State Leaderboard #3", desc: "All-time ranking", unlocked: true },
+                  { icon: "🏆", title: "CM Recognition Certificate", desc: "Verified contributor" },
+                  { icon: "🎖️", title: "District Guardian Badge", desc: "50+ verified reports" },
+                  { icon: "⭐", title: "State Leaderboard #3", desc: "All-time ranking" },
                 ].map((r, i) => (
                   <div key={i} className="flex items-center gap-2 p-2 rounded-lg bg-gold/5 border border-gold/10 mb-1.5">
                     <span className="text-lg">{r.icon}</span>
@@ -159,7 +165,7 @@ export default function SlidePhase3App() {
               </div>
             </div>
             <p className="text-sm font-semibold">Rewards & Recognition</p>
-            <p className="text-xs opacity-60 text-center">CM-level rewards, state leaderboard & achievements</p>
+            <p className="text-xs opacity-60 text-center">CM-level rewards & achievements</p>
           </div>
         </div>
       </div>
