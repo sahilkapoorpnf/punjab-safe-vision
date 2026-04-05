@@ -206,4 +206,73 @@
     border-color: hsl(var(--primary));
     background: hsl(var(--card));
   }
+
+  .slide-hero-image {
+    @apply w-full rounded-2xl overflow-hidden shadow-2xl;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+  }
+
+  .slide-hero-image-full {
+    @apply absolute inset-0 w-full h-full object-cover;
+  }
+
+  .slide-hero-overlay {
+    @apply absolute inset-0;
+    background: linear-gradient(180deg, transparent 0%, hsl(var(--navy) / 0.7) 100%);
+  }
+
+  .slide-hero-overlay-dark {
+    @apply absolute inset-0;
+    background: linear-gradient(180deg, hsl(var(--navy) / 0.4) 0%, hsl(var(--navy) / 0.85) 100%);
+  }
+
+  .glow-orb {
+    @apply absolute rounded-full blur-3xl opacity-20 animate-pulse;
+  }
+
+  .grid-pattern {
+    background-image: 
+      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .grid-pattern-dark {
+    background-image: 
+      linear-gradient(hsl(var(--primary-foreground) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary-foreground) / 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .floating-shape {
+    @apply absolute rounded-full opacity-10;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.05); }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+
+  .stat-card-hover {
+    @apply rounded-2xl p-6 border shadow-sm transition-all duration-300;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .stat-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -12px hsl(var(--primary) / 0.15);
+    border-color: hsl(var(--primary) / 0.3);
+  }
 }
