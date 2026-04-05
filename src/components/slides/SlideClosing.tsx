@@ -1,5 +1,6 @@
-import { Shield, Mail, Phone, Globe } from "lucide-react";
+import { Shield, Mail, Globe, Phone } from "lucide-react";
 import SlideLayout from "./SlideLayout";
+import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
 
 export default function SlideClosing() {
   return (
@@ -20,21 +21,26 @@ export default function SlideClosing() {
           <h3 className="text-2xl font-bold">Thank You</h3>
           <p className="opacity-60 text-sm">NashaMukt Punjab — Building a Safer Future Together</p>
 
-          <div className="flex items-center justify-center gap-8 pt-4 opacity-50 text-sm">
+          <div className="flex flex-col items-center gap-4 pt-4">
+            <img src={bitdecentroLogo} alt="BitDecentro" className="h-10 opacity-90" />
+            <p className="text-lg font-semibold opacity-80">BitDecentro</p>
+          </div>
+
+          <div className="flex items-center justify-center gap-8 pt-2 opacity-50 text-sm">
             <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4" /> contact@example.com
+              <Globe className="w-4 h-4" /> bitdecentro.com
             </div>
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4" /> +91 XXXX XXXX XX
+              <Mail className="w-4 h-4" /> contact@bitdecentro.com
             </div>
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4" /> www.example.com
+              <Phone className="w-4 h-4" /> +91-XXXXXXXXXX
             </div>
           </div>
         </div>
 
         <p className="text-xs opacity-30 pt-8">
-          Confidential Document — Government of Punjab
+          © 2025 BitDecentro. All rights reserved. Confidential & Proprietary.
         </p>
       </div>
     </SlideLayout>
