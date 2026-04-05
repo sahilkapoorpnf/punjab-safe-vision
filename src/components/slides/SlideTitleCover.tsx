@@ -1,5 +1,6 @@
 import { Shield, Eye, Users } from "lucide-react";
 import SlideLayout from "./SlideLayout";
+import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
 
 export default function SlideTitleCover() {
   return (
@@ -34,7 +35,13 @@ export default function SlideTitleCover() {
           </div>
         </div>
 
-        <p className="text-sm opacity-40 pt-12">
+        <div className="pt-12 flex flex-col items-center gap-3">
+          <p className="text-xs opacity-40 uppercase tracking-widest">Built by</p>
+          <img src={bitdecentroLogo} alt="BitDecentro" className="h-8 opacity-80" />
+          <p className="text-sm opacity-50 font-medium">bitdecentro.com</p>
+        </div>
+
+        <p className="text-sm opacity-40">
           Confidential — For Government Officials & Decision Makers Only
         </p>
       </div>
