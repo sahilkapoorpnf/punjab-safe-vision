@@ -3,8 +3,12 @@ import SlideLayout from "./SlideLayout";
 
 export default function SlidePhase1App() {
   return (
-    <SlideLayout>
-      <div className="space-y-8">
+    <SlideLayout className="relative overflow-hidden">
+      <div className="absolute inset-0 grid-pattern" />
+      <div className="floating-shape w-20 h-20 bg-primary top-28 right-10" style={{ animationDelay: "1s" }} />
+      <div className="floating-shape w-14 h-14 bg-accent bottom-48 left-20" style={{ animationDelay: "4s" }} />
+
+      <div className="space-y-8 relative z-10">
         <div>
           <span className="badge-pill badge-blue mb-4">Phase 1 — Citizen App</span>
           <h2 className="slide-title text-3xl md:text-4xl text-foreground mt-4">
@@ -20,13 +24,13 @@ export default function SlidePhase1App() {
             <div className="mockup-phone scale-90">
               <div className="mockup-phone-screen p-4 flex flex-col">
                 <div className="text-center pt-4 pb-6">
-                  <div className="w-12 h-12 rounded-full bg-primary mx-auto flex items-center justify-center mb-2">
+                  <div className="w-12 h-12 rounded-full bg-primary mx-auto flex items-center justify-center mb-2 shadow-lg shadow-primary/30">
                     <span className="text-primary-foreground font-black text-lg">N</span>
                   </div>
                   <p className="font-bold text-sm text-foreground">NashaMukt Punjab</p>
                   <p className="text-[10px] text-muted-foreground">Report Anonymously. Stay Safe.</p>
                 </div>
-                <button className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm flex items-center justify-center gap-2 mb-3">
+                <button className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm flex items-center justify-center gap-2 mb-3 shadow-lg shadow-accent/20">
                   <Send className="w-4 h-4" /> Report Now
                 </button>
                 <div className="space-y-2 mt-auto">
@@ -63,7 +67,7 @@ export default function SlidePhase1App() {
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                     <MapPin className="w-3 h-3" /> GPS Auto-Captured
                   </div>
-                  <button className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-bold text-xs">
+                  <button className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-lg shadow-primary/20">
                     Submit Report
                   </button>
                 </div>
@@ -82,8 +86,8 @@ export default function SlidePhase1App() {
               "Report ID for anonymous tracking",
               "Status updates: Received → Under Review → Action Taken",
             ].map((f, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" />
+              <div key={i} className="flex items-start gap-3 group">
+                <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                 <p className="text-sm text-foreground">{f}</p>
               </div>
             ))}

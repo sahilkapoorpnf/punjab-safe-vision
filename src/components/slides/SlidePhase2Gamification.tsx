@@ -3,8 +3,12 @@ import SlideLayout from "./SlideLayout";
 
 export default function SlidePhase2Gamification() {
   return (
-    <SlideLayout>
-      <div className="space-y-8">
+    <SlideLayout className="relative overflow-hidden">
+      <div className="absolute inset-0 grid-pattern" />
+      <div className="glow-orb w-56 h-56 bg-gold top-10 right-0 opacity-10" />
+      <div className="floating-shape w-16 h-16 bg-primary bottom-40 left-8" style={{ animationDelay: "2s" }} />
+
+      <div className="space-y-8 relative z-10">
         <div>
           <span className="badge-pill badge-gold mb-4">Phase 2 — Gamification</span>
           <h2 className="slide-title text-3xl md:text-4xl text-foreground mt-4">
@@ -24,7 +28,7 @@ export default function SlidePhase2Gamification() {
                 <p className="font-bold text-sm text-foreground mb-4">My Profile</p>
                 
                 <div className="text-center space-y-2 mb-4">
-                  <div className="w-14 h-14 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center mx-auto">
+                  <div className="w-14 h-14 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center mx-auto shadow-lg shadow-gold/20">
                     <Trophy className="w-6 h-6 text-gold" />
                   </div>
                   <p className="font-bold text-sm text-foreground">Punjab Protector</p>
@@ -67,9 +71,9 @@ export default function SlidePhase2Gamification() {
           </div>
 
           <div className="space-y-6">
-            <div className="stat-card space-y-3">
+            <div className="stat-card-hover space-y-3 group">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-gold" />
+                <Star className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
                 <h3 className="font-bold text-foreground">Points System</h3>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -77,9 +81,9 @@ export default function SlidePhase2Gamification() {
               </p>
             </div>
 
-            <div className="stat-card space-y-3">
+            <div className="stat-card-hover space-y-3 group">
               <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-primary" />
+                <Award className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
                 <h3 className="font-bold text-foreground">Badges</h3>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -89,9 +93,9 @@ export default function SlidePhase2Gamification() {
               </div>
             </div>
 
-            <div className="stat-card space-y-3">
+            <div className="stat-card-hover space-y-3 group">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-success" />
+                <Users className="w-5 h-5 text-success group-hover:scale-110 transition-transform" />
                 <h3 className="font-bold text-foreground">Purpose</h3>
               </div>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
