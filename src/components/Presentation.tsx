@@ -10,8 +10,12 @@ import SlidePhase1Title from "./slides/SlidePhase1Title";
 import SlidePhase1App from "./slides/SlidePhase1App";
 import SlidePhase1Dashboard from "./slides/SlidePhase1Dashboard";
 import SlidePhase2 from "./slides/SlidePhase2";
+import SlidePhase2Dashboard from "./slides/SlidePhase2Dashboard";
+import SlidePhase2App from "./slides/SlidePhase2App";
 import SlidePhase2Gamification from "./slides/SlidePhase2Gamification";
 import SlidePhase3 from "./slides/SlidePhase3";
+import SlidePhase3Dashboard from "./slides/SlidePhase3Dashboard";
+import SlidePhase3App from "./slides/SlidePhase3App";
 import SlideTechStack from "./slides/SlideTechStack";
 import SlideSecurity from "./slides/SlideSecurity";
 import SlideImpact from "./slides/SlideImpact";
@@ -29,8 +33,12 @@ const slides = [
   SlidePhase1App,
   SlidePhase1Dashboard,
   SlidePhase2,
+  SlidePhase2Dashboard,
+  SlidePhase2App,
   SlidePhase2Gamification,
   SlidePhase3,
+  SlidePhase3Dashboard,
+  SlidePhase3App,
   SlideTechStack,
   SlideSecurity,
   SlideImpact,
