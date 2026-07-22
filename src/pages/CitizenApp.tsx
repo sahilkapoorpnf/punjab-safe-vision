@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   Camera,
+  Clock,
   EyeOff,
   History,
   LogOut,
@@ -12,6 +13,7 @@ import {
   Video,
   X,
 } from "lucide-react";
+
 import {
   Evidence,
   LUDHIANA_POINTS,
