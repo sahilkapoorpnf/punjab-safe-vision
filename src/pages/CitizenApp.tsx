@@ -341,6 +341,6 @@ export default function CitizenApp() {
           <span className="text-[10px] text-muted-foreground">Powered by BitDecentro</span>
         </div>
       </div>
-    </div>
+    </MobileFrame>
   );
 }
