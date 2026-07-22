@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   Camera,
+  Clock,
   EyeOff,
   History,
   LogOut,
@@ -12,6 +13,7 @@ import {
   Video,
   X,
 } from "lucide-react";
+
 import {
   Evidence,
   LUDHIANA_POINTS,
@@ -183,7 +185,15 @@ export default function CitizenApp() {
                   </SelectContent>
                 </Select>
                 <p className="text-[10px] text-muted-foreground mt-1">
-                  Lat {LUDHIANA_POINTS[locIdx].lat.toFixed(4)}, Lng {LUDHIANA_POINTS[locIdx].lng.toFixed(4)} · Auto-detected
+                  Lat {LUDHIANA_POINTS[locIdx].lat.toFixed(4)}, Lng {LUDHIANA_POINTS[locIdx].lng.toFixed(4)} · Auto-detected via GPS
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50 border border-border">
+                <Clock className="w-3.5 h-3.5 text-primary" />
+                <p className="text-[11px] text-muted-foreground">
+                  Date & time are captured automatically — you don't need to enter them.
+                  <span className="block text-foreground font-semibold">{new Date().toLocaleString("en-IN")}</span>
                 </p>
               </div>
 
@@ -192,10 +202,11 @@ export default function CitizenApp() {
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="What did you observe? (time, people, vehicles...)"
+                  placeholder="What did you observe? (people, vehicles, activity...)"
                   rows={3}
                 />
               </div>
+
 
               <div>
                 <Label>Severity</Label>

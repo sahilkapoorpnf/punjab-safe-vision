@@ -109,9 +109,13 @@ export function logout() {
 }
 
 // ---------- Zones ----------
-// Approximate: 3 decimal places ~ 111m. We use 2 dp ~ 1.1 km for zone grouping.
+// Approximate: 3 decimal places ~ 111m. We use 3 dp ~ 110m for tight location grouping,
+// so "same location" really means the same street corner.
 export function zoneIdFromCoords(lat: number, lng: number) {
-  return `Z_${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  return `Z_${lat.toFixed(3)}_${lng.toFixed(3)}`;
+}
+export function locationKey(lat: number, lng: number) {
+  return `${lat.toFixed(4)}_${lng.toFixed(4)}`;
 }
 
 // Predefined Ludhiana points to make lat/lng realistic in the demo.
@@ -124,7 +128,12 @@ export const LUDHIANA_POINTS: { name: string; lat: number; lng: number }[] = [
   { name: "Basti Jodhewal, Ludhiana", lat: 30.9345, lng: 75.8501 },
   { name: "Salem Tabri, Ludhiana", lat: 30.9280, lng: 75.8620 },
   { name: "Focal Point, Ludhiana", lat: 30.8730, lng: 75.9110 },
+  { name: "Jamalpur, Ludhiana", lat: 30.9420, lng: 75.8710 },
+  { name: "Shimlapuri, Ludhiana", lat: 30.9218, lng: 75.8555 },
+  { name: "Gill Road, Ludhiana", lat: 30.8945, lng: 75.8622 },
+  { name: "Threekey Chowk, Ludhiana", lat: 30.8802, lng: 75.8480 },
 ];
+
 
 // ---------- Reports ----------
 export function getReports(): Report[] {
@@ -223,85 +232,183 @@ export function computeZones(): ZoneStats[] {
   return Array.from(map.values()).sort((a, b) => b.reportCount - a.reportCount);
 }
 
+// ---------- Location detail ----------
+export interface LocationStats {
+  key: string;
+  address: string;
+  centerLat: number;
+  centerLng: number;
+  reports: Report[];
+  firstAt: number;
+  lastAt: number;
+  categories: Record<string, number>;
+  hourHistogram: number[]; // 24
+  dayHistogram: number[]; // 7 (Sun..Sat)
+}
+export function getLocationStats(key: string): LocationStats | null {
+  const reports = getReports().filter((r) => locationKey(r.lat, r.lng) === key);
+  if (reports.length === 0) return null;
+  const hourHistogram = new Array(24).fill(0);
+  const dayHistogram = new Array(7).fill(0);
+  const categories: Record<string, number> = {};
+  let firstAt = reports[0].createdAt;
+  let lastAt = reports[0].createdAt;
+  for (const r of reports) {
+    const d = new Date(r.createdAt);
+    hourHistogram[d.getHours()]++;
+    dayHistogram[d.getDay()]++;
+    categories[r.category] = (categories[r.category] || 0) + 1;
+    firstAt = Math.min(firstAt, r.createdAt);
+    lastAt = Math.max(lastAt, r.createdAt);
+  }
+  return {
+    key,
+    address: reports[0].address,
+    centerLat: reports[0].lat,
+    centerLng: reports[0].lng,
+    reports: reports.sort((a, b) => b.createdAt - a.createdAt),
+    firstAt,
+    lastAt,
+    categories,
+    hourHistogram,
+    dayHistogram,
+  };
+}
+export function getReportById(id: string): Report | null {
+  return getReports().find((r) => r.id === id) ?? null;
+}
+
+// ---------- CSV ----------
+export function reportsToCSV(reports: Report[]): string {
+  const cols = [
+    "id", "createdAt", "date", "time", "category", "severity", "status",
+    "address", "lat", "lng", "zoneId", "reporter", "anonymous",
+    "assignedTo", "evidenceCount", "description",
+  ];
+  const rows = reports.map((r) => {
+    const d = new Date(r.createdAt);
+    return [
+      r.id,
+      r.createdAt,
+      d.toLocaleDateString("en-IN"),
+      d.toLocaleTimeString("en-IN"),
+      r.category,
+      r.severity,
+      r.status,
+      r.address,
+      r.lat.toFixed(6),
+      r.lng.toFixed(6),
+      r.zoneId,
+      r.citizenName,
+      r.anonymous ? "yes" : "no",
+      r.assignedTo ?? "",
+      r.evidence.length,
+      (r.description || "").replace(/\r?\n/g, " "),
+    ];
+  });
+  const esc = (v: any) => {
+    const s = String(v ?? "");
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [cols.join(","), ...rows.map((r) => r.map(esc).join(","))].join("\n");
+}
+export function downloadCSV(filename: string, csv: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ---------- Seed demo data ----------
+const CATEGORIES: ReportCategory[] = ["Drug Selling", "Suspicious Activity", "Consumption", "Trafficking", "Other"];
+const SEVERITIES: ("Low" | "Medium" | "High")[] = ["Low", "Medium", "High"];
+const DESCRIPTIONS: Record<ReportCategory, string[]> = {
+  "Drug Selling": [
+    "Repeated selling near park corner during late hours.",
+    "Two men on bike exchanging packets, cash visible.",
+    "Same location, different day — suspicious exchange.",
+    "Local shopkeeper reports frequent hand-offs behind shutter.",
+  ],
+  "Suspicious Activity": [
+    "Group loitering, exchanging packets.",
+    "Unfamiliar SUV parked for 40+ minutes, engine running.",
+    "Late-night gathering behind school wall.",
+  ],
+  "Consumption": [
+    "Open consumption behind shops.",
+    "Injecting drug use visible from footpath.",
+    "Group smoking near community park.",
+  ],
+  "Trafficking": [
+    "Vehicle repeatedly seen offloading at odd hours.",
+    "Tempo unloading unmarked boxes at 2 AM.",
+    "Same courier bike visits this spot every Tuesday.",
+  ],
+  "Other": [
+    "Suspected pharmacy over-the-counter sale.",
+    "Minor seen buying suspicious pouches.",
+  ],
+};
+
+function makeRandomReport(i: number, now: number): Report {
+  // Weighted distribution — first 4 points get most reports (repeat hotspots)
+  const weight = [10, 8, 6, 5, 3, 3, 4, 3, 2, 2, 2, 2];
+  const pool: number[] = [];
+  weight.forEach((w, idx) => { for (let x = 0; x < w; x++) pool.push(idx); });
+  const pIdx = pool[i % pool.length];
+  const p = LUDHIANA_POINTS[pIdx];
+  const category = CATEGORIES[i % CATEGORIES.length];
+  const descPool = DESCRIPTIONS[category];
+  const description = descPool[i % descPool.length];
+  // Bias timestamps toward evenings/nights — that's when this stuff peaks
+  const evenings = [20, 21, 22, 23, 0, 1, 2, 15, 17, 19];
+  const hour = evenings[i % evenings.length];
+  const daysAgo = i % 30;
+  const d = new Date(now);
+  d.setDate(d.getDate() - daysAgo);
+  d.setHours(hour, (i * 17) % 60, (i * 29) % 60, 0);
+  const severity: "Low" | "Medium" | "High" =
+    ["Drug Selling", "Trafficking"].includes(category) ? (i % 3 === 0 ? "High" : "Medium") : SEVERITIES[i % 3];
+  // Tiny jitter so lat/lng repeats cluster tightly
+  const jitterLat = ((i % 5) - 2) * 0.0002;
+  const jitterLng = ((i % 4) - 2) * 0.0002;
+  const lat = p.lat + jitterLat;
+  const lng = p.lng + jitterLng;
+  const statuses: ReportStatus[] = ["New", "New", "New", "Assigned", "In Progress", "Resolved"];
+  const status = statuses[i % statuses.length];
+  return {
+    id: "RPT-" + (5000 + i),
+    citizenId: "cit_demo" + ((i % 40) + 1),
+    citizenName: "Anonymous",
+    anonymous: true,
+    category,
+    description,
+    lat,
+    lng,
+    address: p.name,
+    createdAt: d.getTime(),
+    status,
+    assignedTo: status === "New" ? undefined : ["Insp. H. Kaur", "SI. R. Singh", "SI. M. Sharma", "ASI. J. Kaur"][i % 4],
+    evidence: [],
+    zoneId: zoneIdFromCoords(lat, lng),
+    severity,
+  };
+}
+
 export function seedIfEmpty() {
   if (getReports().length > 0) return;
   const now = Date.now();
-  const samples: Omit<Report, "id" | "createdAt" | "zoneId" | "status">[] = [
-    {
-      citizenId: "cit_demo1",
-      citizenName: "Anonymous",
-      anonymous: true,
-      category: "Drug Selling",
-      description: "Repeated selling near park corner during late hours.",
-      lat: LUDHIANA_POINTS[0].lat,
-      lng: LUDHIANA_POINTS[0].lng,
-      address: LUDHIANA_POINTS[0].name,
-      evidence: [],
-      severity: "High",
-    },
-    {
-      citizenId: "cit_demo1",
-      citizenName: "Anonymous",
-      anonymous: true,
-      category: "Drug Selling",
-      description: "Same location, different day — suspicious exchange.",
-      lat: LUDHIANA_POINTS[0].lat + 0.001,
-      lng: LUDHIANA_POINTS[0].lng - 0.001,
-      address: LUDHIANA_POINTS[0].name,
-      evidence: [],
-      severity: "High",
-    },
-    {
-      citizenId: "cit_demo2",
-      citizenName: "R. Singh",
-      anonymous: false,
-      category: "Suspicious Activity",
-      description: "Group loitering, exchanging packets.",
-      lat: LUDHIANA_POINTS[2].lat,
-      lng: LUDHIANA_POINTS[2].lng,
-      address: LUDHIANA_POINTS[2].name,
-      evidence: [],
-      severity: "Medium",
-    },
-    {
-      citizenId: "cit_demo3",
-      citizenName: "Anonymous",
-      anonymous: true,
-      category: "Consumption",
-      description: "Open consumption behind shops.",
-      lat: LUDHIANA_POINTS[4].lat,
-      lng: LUDHIANA_POINTS[4].lng,
-      address: LUDHIANA_POINTS[4].name,
-      evidence: [],
-      severity: "Low",
-    },
-    {
-      citizenId: "cit_demo4",
-      citizenName: "Anonymous",
-      anonymous: true,
-      category: "Trafficking",
-      description: "Vehicle repeatedly seen offloading at odd hours.",
-      lat: LUDHIANA_POINTS[7].lat,
-      lng: LUDHIANA_POINTS[7].lng,
-      address: LUDHIANA_POINTS[7].name,
-      evidence: [],
-      severity: "High",
-    },
-  ];
-  // Insert with staggered timestamps
-  const list: Report[] = samples.map((s, i) => ({
-    ...s,
-    id: "RPT-" + (5000 + i),
-    createdAt: now - (samples.length - i) * 1000 * 60 * 60 * 6,
-    zoneId: zoneIdFromCoords(s.lat, s.lng),
-    status: i === 2 ? "Assigned" : i === 3 ? "Resolved" : "New",
-    assignedTo: i === 2 ? "Insp. Kaur" : undefined,
-  }));
+  const list: Report[] = [];
+  for (let i = 0; i < 84; i++) list.push(makeRandomReport(i, now));
+  // Sort newest first
+  list.sort((a, b) => b.createdAt - a.createdAt);
   saveReports(list);
-  // notifications for the new ones
   const notifs: AppNotification[] = list
     .filter((r) => r.status === "New")
+    .slice(0, 20)
     .map((r) => ({
       id: "N-" + r.id,
       reportId: r.id,
@@ -313,6 +420,7 @@ export function seedIfEmpty() {
     }));
   write(K.notifs, notifs);
 }
+
 
 // ---------- React hook helper ----------
 import { useEffect, useState } from "react";
