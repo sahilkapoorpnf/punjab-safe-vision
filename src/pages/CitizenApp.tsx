@@ -130,9 +130,12 @@ export default function CitizenApp() {
               <LogOut className="w-4 h-4" />
             </button>
           </div>
-          <div className="mt-4">
-            <p className="text-xs opacity-80">Namaste,</p>
-            <p className="text-xl font-bold">{user.name}</p>
+          <div className="mt-4 flex items-center gap-2">
+            <EyeOff className="w-4 h-4 opacity-80" />
+            <div>
+              <p className="text-xs opacity-80">You are reporting as</p>
+              <p className="text-lg font-bold">Anonymous Citizen</p>
+            </div>
           </div>
         </div>
 
