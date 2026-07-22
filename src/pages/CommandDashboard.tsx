@@ -805,9 +805,29 @@ function SettingsSection() {
         </div>
         <Button className="mt-4">Save changes</Button>
       </div>
+
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <h3 className="font-bold mb-2">Demo data</h3>
+        <p className="text-sm text-muted-foreground">
+          Reset local demo storage and re-seed with the latest richer dataset (84 reports, weighted hotspots, hour-of-day patterns).
+        </p>
+        <Button
+          variant="outline"
+          className="mt-4"
+          onClick={() => {
+            localStorage.removeItem("nm_reports");
+            localStorage.removeItem("nm_notifs");
+            seedIfEmpty();
+            toast.success("Demo data reseeded");
+          }}
+        >
+          Reset & reseed demo data
+        </Button>
+      </div>
     </div>
   );
 }
+
 
 // -------- Report Dialog --------
 function ReportDialog({ report, onClose }: { report: Report | null; onClose: () => void }) {
