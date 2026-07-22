@@ -1,4 +1,5 @@
-import { Rocket, Clock, Target } from "lucide-react";
+import { Rocket, Clock, Target, Smartphone, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import SlideLayout from "./SlideLayout";
 import heroLudhiana from "@/assets/hero-ludhiana.jpg";
 
@@ -41,6 +42,21 @@ export default function SlidePhase1Title() {
         <p className="text-lg font-medium opacity-70 max-w-xl pt-4">
           "Identify real drug hotspots in Ludhiana within 30 days"
         </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-6">
+          <Link
+            to="/app/login"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary-foreground text-primary font-bold text-sm shadow-lg hover:scale-105 transition-transform"
+          >
+            <Smartphone className="w-4 h-4" /> Open Citizen App Demo
+          </Link>
+          <Link
+            to="/command/login"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm shadow-lg hover:scale-105 transition-transform"
+          >
+            <ShieldCheck className="w-4 h-4" /> Open Command Centre Demo
+          </Link>
+        </div>
       </div>
     </SlideLayout>
   );

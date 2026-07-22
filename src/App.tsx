@@ -5,6 +5,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import CitizenLogin from "./pages/CitizenLogin.tsx";
+import CitizenApp from "./pages/CitizenApp.tsx";
+import CommandLogin from "./pages/CommandLogin.tsx";
+import CommandDashboard from "./pages/CommandDashboard.tsx";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +20,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/app/login" element={<CitizenLogin />} />
+          <Route path="/app" element={<CitizenApp />} />
+          <Route path="/command/login" element={<CommandLogin />} />
+          <Route path="/command" element={<CommandDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
