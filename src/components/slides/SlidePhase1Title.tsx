@@ -1,4 +1,5 @@
-import { Rocket, Clock, Target } from "lucide-react";
+import { Rocket, Clock, Target, Smartphone, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import SlideLayout from "./SlideLayout";
 import heroLudhiana from "@/assets/hero-ludhiana.jpg";
 
