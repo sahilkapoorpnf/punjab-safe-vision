@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Activity,
   AlertTriangle,
   BarChart3,
   Bell,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Clock,
+  Download,
+  ExternalLink,
   Filter,
   LayoutDashboard,
   LogOut,
@@ -22,12 +26,15 @@ import {
   Report,
   ReportStatus,
   computeZones,
+  downloadCSV,
   getNotifications,
   getReports,
   getUser,
+  locationKey,
   logout,
   markAllRead,
   markNotificationRead,
+  reportsToCSV,
   seedIfEmpty,
   updateReportStatus,
   useStoreVersion,
@@ -48,6 +55,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Area,
+  AreaChart,
   BarChart,
   Bar,
   ResponsiveContainer,
@@ -63,6 +72,7 @@ import {
 } from "recharts";
 import { toast } from "sonner";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
+
 
 type Section = "overview" | "reports" | "zones" | "notifications" | "officers" | "analytics" | "settings";
 
