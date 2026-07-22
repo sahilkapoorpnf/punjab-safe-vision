@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
+import MobileFrame from "@/components/MobileFrame";
 
 const categories: ReportCategory[] = [
   "Drug Selling",
