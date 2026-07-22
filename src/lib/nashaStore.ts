@@ -109,9 +109,13 @@ export function logout() {
 }
 
 // ---------- Zones ----------
-// Approximate: 3 decimal places ~ 111m. We use 2 dp ~ 1.1 km for zone grouping.
+// Approximate: 3 decimal places ~ 111m. We use 3 dp ~ 110m for tight location grouping,
+// so "same location" really means the same street corner.
 export function zoneIdFromCoords(lat: number, lng: number) {
-  return `Z_${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  return `Z_${lat.toFixed(3)}_${lng.toFixed(3)}`;
+}
+export function locationKey(lat: number, lng: number) {
+  return `${lat.toFixed(4)}_${lng.toFixed(4)}`;
 }
 
 // Predefined Ludhiana points to make lat/lng realistic in the demo.
@@ -124,7 +128,12 @@ export const LUDHIANA_POINTS: { name: string; lat: number; lng: number }[] = [
   { name: "Basti Jodhewal, Ludhiana", lat: 30.9345, lng: 75.8501 },
   { name: "Salem Tabri, Ludhiana", lat: 30.9280, lng: 75.8620 },
   { name: "Focal Point, Ludhiana", lat: 30.8730, lng: 75.9110 },
+  { name: "Jamalpur, Ludhiana", lat: 30.9420, lng: 75.8710 },
+  { name: "Shimlapuri, Ludhiana", lat: 30.9218, lng: 75.8555 },
+  { name: "Gill Road, Ludhiana", lat: 30.8945, lng: 75.8622 },
+  { name: "Threekey Chowk, Ludhiana", lat: 30.8802, lng: 75.8480 },
 ];
+
 
 // ---------- Reports ----------
 export function getReports(): Report[] {
