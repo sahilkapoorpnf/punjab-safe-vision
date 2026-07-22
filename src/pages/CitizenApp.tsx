@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   Camera,
+  EyeOff,
   History,
   LogOut,
   MapPin,
