@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   Camera,
+  EyeOff,
   History,
   LogOut,
   MapPin,
@@ -32,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
 
@@ -58,7 +58,7 @@ export default function CitizenApp() {
   const [category, setCategory] = useState<ReportCategory>("Drug Selling");
   const [description, setDescription] = useState("");
   const [locIdx, setLocIdx] = useState(0);
-  const [anonymous, setAnonymous] = useState(true);
+  const anonymous = true;
   const [severity, setSeverity] = useState<"Low" | "Medium" | "High">("High");
   const [evidence, setEvidence] = useState<Evidence[]>([]);
 
@@ -130,9 +130,12 @@ export default function CitizenApp() {
               <LogOut className="w-4 h-4" />
             </button>
           </div>
-          <div className="mt-4">
-            <p className="text-xs opacity-80">Namaste,</p>
-            <p className="text-xl font-bold">{user.name}</p>
+          <div className="mt-4 flex items-center gap-2">
+            <EyeOff className="w-4 h-4 opacity-80" />
+            <div>
+              <p className="text-xs opacity-80">You are reporting as</p>
+              <p className="text-lg font-bold">Anonymous Citizen</p>
+            </div>
           </div>
         </div>
 
@@ -251,12 +254,12 @@ export default function CitizenApp() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                <EyeOff className="w-4 h-4 text-primary shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold">Report Anonymously</p>
-                  <p className="text-[10px] text-muted-foreground">Your identity stays hidden from officers</p>
+                  <p className="text-sm font-semibold">You are fully anonymous</p>
+                  <p className="text-[10px] text-muted-foreground">Officers only see the incident details — never your identity.</p>
                 </div>
-                <Switch checked={anonymous} onCheckedChange={setAnonymous} />
               </div>
 
               <Button onClick={submit} className="w-full" size="lg">
