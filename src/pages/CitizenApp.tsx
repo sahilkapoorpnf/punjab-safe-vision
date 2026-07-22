@@ -251,12 +251,12 @@ export default function CitizenApp() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                <EyeOff className="w-4 h-4 text-primary shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold">Report Anonymously</p>
-                  <p className="text-[10px] text-muted-foreground">Your identity stays hidden from officers</p>
+                  <p className="text-sm font-semibold">You are fully anonymous</p>
+                  <p className="text-[10px] text-muted-foreground">Officers only see the incident details — never your identity.</p>
                 </div>
-                <Switch checked={anonymous} onCheckedChange={setAnonymous} />
               </div>
 
               <Button onClick={submit} className="w-full" size="lg">
