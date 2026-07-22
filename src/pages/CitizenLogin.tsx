@@ -1,29 +1,17 @@
-import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Shield, Smartphone } from "lucide-react";
-import { loginCitizen, seedIfEmpty } from "@/lib/nashaStore";
+import { Shield, EyeOff, Lock, MapPin } from "lucide-react";
+import { setUser, seedIfEmpty } from "@/lib/nashaStore";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
 
 export default function CitizenLogin() {
   const nav = useNavigate();
-  const [phone, setPhone] = useState("");
-  const [name, setName] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (phone.length < 10) return;
-    setOtpSent(true);
-  };
-  const handleVerify = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otp.length < 4) return;
+  const enterAnonymously = () => {
     seedIfEmpty();
-    loginCitizen(phone, name || "Citizen");
+    // Random opaque ID; no phone, no name, no identity
+    const anonId = "anon_" + Math.random().toString(36).slice(2, 10);
+    setUser({ role: "citizen", id: anonId, name: "Anonymous" });
     nav("/app");
   };
 
@@ -36,68 +24,48 @@ export default function CitizenLogin() {
           </div>
           <div className="text-primary-foreground">
             <h1 className="font-black text-2xl leading-tight">NashaMukt Punjab</h1>
-            <p className="text-xs opacity-80">Citizen Reporting App · Pilot: Ludhiana</p>
+            <p className="text-xs opacity-80">Citizen Reporting · Pilot: Ludhiana</p>
           </div>
         </div>
 
         <div className="bg-card rounded-3xl shadow-2xl p-8">
-          <div className="flex items-center gap-2 mb-6">
-            <Smartphone className="w-5 h-5 text-primary" />
-            <h2 className="font-bold text-lg">Sign in to report</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <EyeOff className="w-5 h-5 text-primary" />
+            <h2 className="font-bold text-lg">100% Anonymous Reporting</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-6">
+            No name. No mobile number. No login. Your identity is never collected or shared with the Command Centre.
+          </p>
+
+          <div className="space-y-3 mb-6">
+            {[
+              { icon: EyeOff, title: "No personal details", desc: "We don't ask for your name, number, or Aadhaar." },
+              { icon: Lock, title: "End-to-end encrypted", desc: "Reports are encrypted before leaving your device." },
+              { icon: MapPin, title: "Only location & evidence", desc: "Officers see the incident — not who reported it." },
+            ].map((f) => (
+              <div key={f.title} className="flex gap-3 p-3 rounded-xl bg-secondary/50">
+                <f.icon className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold">{f.title}</p>
+                  <p className="text-xs text-muted-foreground">{f.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {!otpSent ? (
-            <form onSubmit={handleSend} className="space-y-4">
-              <div>
-                <Label>Your Name (optional)</Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Leave blank to stay anonymous"
-                />
-              </div>
-              <div>
-                <Label>Mobile Number</Label>
-                <Input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                  placeholder="10-digit mobile"
-                  inputMode="numeric"
-                />
-              </div>
-              <Button type="submit" className="w-full" size="lg">
-                Send OTP
-              </Button>
-            </form>
-          ) : (
-            <form onSubmit={handleVerify} className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                OTP sent to +91 {phone}. Use <b>1234</b> for demo.
-              </p>
-              <div>
-                <Label>Enter OTP</Label>
-                <Input
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="4-digit OTP"
-                  inputMode="numeric"
-                />
-              </div>
-              <Button type="submit" className="w-full" size="lg">
-                Verify & Enter App
-              </Button>
-              <button
-                type="button"
-                onClick={() => setOtpSent(false)}
-                className="text-xs text-muted-foreground hover:underline w-full text-center"
-              >
-                Change number
-              </button>
-            </form>
-          )}
+          <Button onClick={enterAnonymously} className="w-full" size="lg">
+            Continue Anonymously →
+          </Button>
+
+          <p className="text-[10px] text-center text-muted-foreground mt-4">
+            By continuing you agree to report in good faith. False reporting is a punishable offence under law.
+          </p>
 
           <div className="mt-6 pt-6 border-t border-border text-center text-xs text-muted-foreground">
-            Command Centre staff? <Link to="/command/login" className="text-primary font-semibold hover:underline">Officer Login →</Link>
+            Command Centre staff?{" "}
+            <Link to="/command/login" className="text-primary font-semibold hover:underline">
+              Officer Login →
+            </Link>
           </div>
         </div>
 
