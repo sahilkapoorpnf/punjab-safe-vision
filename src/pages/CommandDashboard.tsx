@@ -567,14 +567,57 @@ function ReportsSection({ reports, onOpen }: { reports: Report[]; onOpen: (r: Re
 
 // -------- Zones --------
 function ZonesSection({ zones }: any) {
+  const totalReports = zones.reduce((s: number, z: any) => s + z.reportCount, 0);
+  const avg = zones.length ? (totalReports / zones.length).toFixed(1) : "0";
+  const high = zones.filter((z: any) => z.severity === "High").length;
+  const med = zones.filter((z: any) => z.severity === "Medium").length;
+  const low = zones.filter((z: any) => z.severity === "Low").length;
+  const mostActive = zones[0];
+
   return (
     <div className="space-y-4">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        {[
+          { label: "Total Zones", value: zones.length, color: "text-primary" },
+          { label: "Reports Tracked", value: totalReports, color: "text-foreground" },
+          { label: "Avg / Zone", value: avg, color: "text-foreground" },
+          { label: "Red (High)", value: high, color: "text-accent" },
+          { label: "Amber (Med)", value: med, color: "text-[hsl(45,70%,35%)]" },
+          { label: "Green (Low)", value: low, color: "text-[hsl(var(--success))]" },
+        ].map((s) => (
+          <div key={s.label} className="stat-card-hover">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</p>
+            <p className={`text-2xl font-black mt-1 ${s.color}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {mostActive && (
+        <div className="rounded-2xl border border-accent/40 bg-accent/5 p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-accent font-bold">Most Active Zone</p>
+              <p className="font-bold">{mostActive.label} — {mostActive.reportCount} reports</p>
+              <p className="text-[11px] text-muted-foreground">Recommend increased patrol frequency and CCTV audit.</p>
+            </div>
+          </div>
+          <Link to={`/command/location/${locationKey(mostActive.centerLat, mostActive.centerLng)}`}>
+            <Button size="sm">Open Dossier</Button>
+          </Link>
+        </div>
+      )}
+
       <p className="text-sm text-muted-foreground">
-        Repeated activity at the same lat/lng gets grouped into zones. Click any zone to open the full location dossier with hour/day heatmap and complete report history.
+        Repeated activity at the same lat/lng is grouped into zones. Click any zone to open the full location dossier with hour/day heatmap and complete report history.
       </p>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {zones.map((z: any) => {
           const lk = locationKey(z.centerLat, z.centerLng);
+          const topCat = Object.entries(z.categories).sort((a: any, b: any) => b[1] - a[1])[0];
           return (
             <Link
               key={z.zoneId}
@@ -604,7 +647,12 @@ function ZonesSection({ zones }: any) {
                   <p className="text-[9px] text-muted-foreground">Lng</p>
                 </div>
               </div>
-              <p className="text-[10px] text-muted-foreground mt-2">
+              {topCat && (
+                <p className="text-[10px] text-muted-foreground mt-2">
+                  Dominant: <b className="text-foreground">{topCat[0]}</b> ({String(topCat[1])})
+                </p>
+              )}
+              <p className="text-[10px] text-muted-foreground">
                 Last activity: {new Date(z.lastReportAt).toLocaleString("en-IN")}
               </p>
               <div className="mt-3 pt-3 border-t border-border">
@@ -669,38 +717,95 @@ function NotificationsSection({ onOpenReport }: { onOpenReport: (id: string) => 
 // -------- Officers --------
 function OfficersSection() {
   const officers = [
-    { id: "PB-LDH-1042", name: "Insp. H. Kaur", station: "Ludhiana HQ", active: 12, resolved: 87 },
-    { id: "PB-LDH-1087", name: "SI. R. Singh", station: "Model Town PS", active: 8, resolved: 63 },
-    { id: "PB-LDH-1123", name: "SI. M. Sharma", station: "Civil Lines PS", active: 5, resolved: 44 },
-    { id: "PB-LDH-1204", name: "ASI. J. Kaur", station: "Dugri PS", active: 3, resolved: 31 },
-    { id: "PB-LDH-1298", name: "HC. P. Verma", station: "Haibowal PS", active: 2, resolved: 22 },
+    { id: "PB-LDH-1042", name: "Insp. Harpreet Kaur", rank: "Inspector", station: "Ludhiana HQ", division: "Central", shift: "Day (08:00–20:00)", contact: "+91 98xx-xx-1042", active: 12, resolved: 87, sla: 94, arrests: 18, status: "On Duty" },
+    { id: "PB-LDH-1087", name: "SI. Rajwinder Singh", rank: "Sub-Inspector", station: "Model Town PS", division: "South", shift: "Night (20:00–08:00)", contact: "+91 98xx-xx-1087", active: 8, resolved: 63, sla: 91, arrests: 12, status: "On Duty" },
+    { id: "PB-LDH-1123", name: "SI. Manjeet Sharma", rank: "Sub-Inspector", station: "Civil Lines PS", division: "North", shift: "Day (08:00–20:00)", contact: "+91 98xx-xx-1123", active: 5, resolved: 44, sla: 88, arrests: 9, status: "On Duty" },
+    { id: "PB-LDH-1204", name: "ASI. Jaspreet Kaur", rank: "Asst. Sub-Inspector", station: "Dugri PS", division: "South", shift: "Rotational", contact: "+91 98xx-xx-1204", active: 3, resolved: 31, sla: 85, arrests: 6, status: "On Duty" },
+    { id: "PB-LDH-1298", name: "HC. Pawan Verma", rank: "Head Constable", station: "Haibowal PS", division: "North", shift: "Night (20:00–08:00)", contact: "+91 98xx-xx-1298", active: 2, resolved: 22, sla: 82, arrests: 4, status: "On Duty" },
+    { id: "PB-LDH-1345", name: "SI. Amrit Pal", rank: "Sub-Inspector", station: "Focal Point PS", division: "East", shift: "Day (08:00–20:00)", contact: "+91 98xx-xx-1345", active: 6, resolved: 38, sla: 89, arrests: 7, status: "On Duty" },
+    { id: "PB-LDH-1402", name: "HC. Sukhwinder Kaur", rank: "Head Constable", station: "Salem Tabri PS", division: "East", shift: "Rotational", contact: "+91 98xx-xx-1402", active: 4, resolved: 29, sla: 87, arrests: 5, status: "Leave" },
+    { id: "PB-LDH-1487", name: "ASI. Balwant Rai", rank: "Asst. Sub-Inspector", station: "Basti Jodhewal PS", division: "West", shift: "Night (20:00–08:00)", contact: "+91 98xx-xx-1487", active: 7, resolved: 41, sla: 90, arrests: 8, status: "On Duty" },
   ];
+
+  const totals = officers.reduce((a, o) => ({ active: a.active + o.active, resolved: a.resolved + o.resolved, arrests: a.arrests + o.arrests }), { active: 0, resolved: 0, arrests: 0 });
+  const avgSla = Math.round(officers.reduce((s, o) => s + o.sla, 0) / officers.length);
+  const onDuty = officers.filter((o) => o.status === "On Duty").length;
+
   return (
-    <div className="rounded-2xl border border-border bg-card overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-secondary/50 text-xs uppercase text-muted-foreground">
-          <tr>
-            <th className="text-left px-4 py-3">Badge</th>
-            <th className="text-left px-4 py-3">Officer</th>
-            <th className="text-left px-4 py-3">Station</th>
-            <th className="text-left px-4 py-3">Active Cases</th>
-            <th className="text-left px-4 py-3">Resolved</th>
-            <th className="text-left px-4 py-3">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {officers.map((o) => (
-            <tr key={o.id} className="border-t border-border">
-              <td className="px-4 py-3 font-mono text-xs">{o.id}</td>
-              <td className="px-4 py-3 font-semibold">{o.name}</td>
-              <td className="px-4 py-3 text-muted-foreground">{o.station}</td>
-              <td className="px-4 py-3">{o.active}</td>
-              <td className="px-4 py-3">{o.resolved}</td>
-              <td className="px-4 py-3"><span className="badge-pill badge-success text-[9px]">On Duty</span></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        {[
+          { label: "Officers", value: officers.length },
+          { label: "On Duty", value: onDuty, color: "text-[hsl(var(--success))]" },
+          { label: "Active Cases", value: totals.active, color: "text-accent" },
+          { label: "Cases Resolved", value: totals.resolved, color: "text-primary" },
+          { label: "Arrests (YTD)", value: totals.arrests },
+          { label: "Avg SLA %", value: `${avgSla}%`, color: "text-[hsl(var(--success))]" },
+        ].map((s) => (
+          <div key={s.label} className="stat-card-hover">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</p>
+            <p className={`text-2xl font-black mt-1 ${s.color ?? "text-foreground"}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-border bg-card overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+          <h3 className="font-bold">Officer Roster · Ludhiana Pilot</h3>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm"><Download className="w-3 h-3 mr-1" /> Roster CSV</Button>
+            <Button size="sm">+ Add Officer</Button>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/50 text-xs uppercase text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-3">Badge</th>
+                <th className="text-left px-4 py-3">Officer</th>
+                <th className="text-left px-4 py-3">Rank</th>
+                <th className="text-left px-4 py-3">Station · Division</th>
+                <th className="text-left px-4 py-3">Shift</th>
+                <th className="text-left px-4 py-3">Contact</th>
+                <th className="text-right px-4 py-3">Active</th>
+                <th className="text-right px-4 py-3">Resolved</th>
+                <th className="text-right px-4 py-3">Arrests</th>
+                <th className="text-right px-4 py-3">SLA%</th>
+                <th className="text-left px-4 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {officers.map((o) => (
+                <tr key={o.id} className="border-t border-border hover:bg-secondary/30">
+                  <td className="px-4 py-3 font-mono text-xs">{o.id}</td>
+                  <td className="px-4 py-3 font-semibold">{o.name}</td>
+                  <td className="px-4 py-3 text-xs">{o.rank}</td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
+                    <div>{o.station}</div>
+                    <div className="text-[10px]">Div: {o.division}</div>
+                  </td>
+                  <td className="px-4 py-3 text-xs">{o.shift}</td>
+                  <td className="px-4 py-3 text-xs font-mono">{o.contact}</td>
+                  <td className="px-4 py-3 text-right">{o.active}</td>
+                  <td className="px-4 py-3 text-right">{o.resolved}</td>
+                  <td className="px-4 py-3 text-right font-semibold">{o.arrests}</td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <div className="w-14 h-1.5 bg-secondary rounded-full overflow-hidden">
+                        <div className={`h-full ${o.sla >= 90 ? "bg-[hsl(var(--success))]" : o.sla >= 85 ? "bg-[hsl(var(--gold))]" : "bg-accent"}`} style={{ width: `${o.sla}%` }} />
+                      </div>
+                      <span className="text-xs font-semibold">{o.sla}%</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`badge-pill text-[9px] ${o.status === "On Duty" ? "badge-success" : "badge-gold"}`}>{o.status}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
@@ -719,60 +824,284 @@ function AnalyticsSection({ reports, zones }: any) {
     { name: "Low", value: reports.filter((r: Report) => r.severity === "Low").length },
   ];
 
-  const trend = useMemo(() => {
-    const days: { day: string; count: number }[] = [];
-    for (let i = 6; i >= 0; i--) {
+  const byStatus = [
+    { name: "New", value: reports.filter((r: Report) => r.status === "New").length },
+    { name: "Assigned", value: reports.filter((r: Report) => r.status === "Assigned").length },
+    { name: "In Progress", value: reports.filter((r: Report) => r.status === "In Progress").length },
+    { name: "Resolved", value: reports.filter((r: Report) => r.status === "Resolved").length },
+  ];
+
+  const trend30 = useMemo(() => {
+    const days: { day: string; count: number; resolved: number }[] = [];
+    for (let i = 29; i >= 0; i--) {
       const d = new Date(Date.now() - i * 86400000);
-      const label = d.toLocaleDateString("en-IN", { weekday: "short" });
-      const count = reports.filter((r: Report) => {
-        const rd = new Date(r.createdAt);
-        return rd.toDateString() === d.toDateString();
-      }).length;
-      days.push({ day: label, count });
+      const label = d.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+      const same = reports.filter((r: Report) => new Date(r.createdAt).toDateString() === d.toDateString());
+      days.push({ day: label, count: same.length, resolved: same.filter((r: Report) => r.status === "Resolved").length });
     }
     return days;
   }, [reports]);
 
-  const COLORS = ["hsl(var(--accent))", "hsl(var(--gold))", "hsl(var(--success))"];
+  // Hour × Day heatmap (7 rows × 24 cols)
+  const heatmap = useMemo(() => {
+    const grid: number[][] = Array.from({ length: 7 }, () => new Array(24).fill(0));
+    reports.forEach((r: Report) => {
+      const d = new Date(r.createdAt);
+      grid[d.getDay()][d.getHours()]++;
+    });
+    return grid;
+  }, [reports]);
+  const maxCell = Math.max(1, ...heatmap.flat());
+
+  // Category × severity stacked
+  const catSev = useMemo(() => {
+    const cats = Array.from(new Set(reports.map((r: Report) => r.category))) as string[];
+    return cats.map((c) => ({
+      name: c,
+      High: reports.filter((r: Report) => r.category === c && r.severity === "High").length,
+      Medium: reports.filter((r: Report) => r.category === c && r.severity === "Medium").length,
+      Low: reports.filter((r: Report) => r.category === c && r.severity === "Low").length,
+    }));
+  }, [reports]);
+
+  // Repeat hotspots
+  const repeat = zones.filter((z: any) => z.reportCount >= 3);
+
+  // Executive KPIs
+  const resolved = reports.filter((r: Report) => r.status === "Resolved").length;
+  const resolutionRate = reports.length ? Math.round((resolved / reports.length) * 100) : 0;
+  const mttr = "1h 42m"; // simulated mean time to resolve
+  const wowThis = reports.filter((r: Report) => Date.now() - r.createdAt < 7 * 86400000).length;
+  const wowPrev = reports.filter((r: Report) => {
+    const age = Date.now() - r.createdAt;
+    return age >= 7 * 86400000 && age < 14 * 86400000;
+  }).length;
+  const wowDelta = wowPrev ? Math.round(((wowThis - wowPrev) / wowPrev) * 100) : 0;
+  const evidenceCount = reports.reduce((s: number, r: Report) => s + r.evidence.length, 0);
+  const nightShare = Math.round(
+    (reports.filter((r: Report) => { const h = new Date(r.createdAt).getHours(); return h >= 20 || h <= 4; }).length / Math.max(1, reports.length)) * 100,
+  );
+
+  const COLORS = ["hsl(var(--accent))", "hsl(var(--gold))", "hsl(var(--success))", "hsl(var(--primary))"];
+  const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const exportAnalytics = () => {
+    const rows = [
+      ["Metric", "Value"],
+      ["Total Reports", reports.length],
+      ["Resolved", resolved],
+      ["Resolution Rate %", resolutionRate],
+      ["Mean Time To Resolve", mttr],
+      ["WoW Delta %", wowDelta],
+      ["Evidence Items", evidenceCount],
+      ["Night-hour Share %", nightShare],
+      ["Zones Tracked", zones.length],
+      ["Repeat Hotspots (>=3)", repeat.length],
+    ];
+    const csv = rows.map((r) => r.join(",")).join("\n");
+    downloadCSV(`nashamukt-analytics-${Date.now()}.csv`, csv);
+  };
 
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <h3 className="font-bold mb-4">Reports by Category</h3>
-        <ResponsiveContainer width="100%" height={240}>
-          <BarChart data={byCategory}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-            <XAxis dataKey="name" fontSize={11} />
-            <YAxis fontSize={11} />
-            <Tooltip />
-            <Bar dataKey="value" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+    <div className="space-y-6">
+      {/* Executive KPI ribbon */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+        {[
+          { label: "Total Reports", value: reports.length, color: "text-primary" },
+          { label: "Resolution %", value: `${resolutionRate}%`, color: "text-[hsl(var(--success))]" },
+          { label: "MTTR", value: mttr, color: "text-foreground" },
+          { label: "WoW", value: `${wowDelta >= 0 ? "+" : ""}${wowDelta}%`, color: wowDelta >= 0 ? "text-accent" : "text-[hsl(var(--success))]" },
+          { label: "Evidence", value: evidenceCount, color: "text-foreground" },
+          { label: "Night Share", value: `${nightShare}%`, color: "text-primary" },
+          { label: "Zones", value: zones.length, color: "text-foreground" },
+          { label: "Repeat Hotspots", value: repeat.length, color: "text-accent" },
+        ].map((s) => (
+          <div key={s.label} className="stat-card-hover">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</p>
+            <p className={`text-2xl font-black mt-1 ${s.color}`}>{s.value}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <h3 className="font-bold mb-4">Severity Distribution</h3>
-        <ResponsiveContainer width="100%" height={240}>
-          <PieChart>
-            <Pie data={bySeverity} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-              {bySeverity.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-muted-foreground">Analytical view is derived from live Command Centre reports. Ready for weekly review submissions.</p>
+        <Button variant="outline" size="sm" onClick={exportAnalytics}>
+          <Download className="w-3 h-3 mr-1" /> Export analytics CSV
+        </Button>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-5 md:col-span-2">
-        <h3 className="font-bold mb-4">7-Day Report Trend</h3>
-        <ResponsiveContainer width="100%" height={240}>
-          <LineChart data={trend}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-            <XAxis dataKey="day" fontSize={11} />
-            <YAxis fontSize={11} />
-            <Tooltip />
-            <Line type="monotone" dataKey="count" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 5 }} />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-bold mb-1">Reports by Category</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Volume distribution across incident categories.</p>
+          <ResponsiveContainer width="100%" height={240}>
+            <BarChart data={byCategory as any}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+              <XAxis dataKey="name" fontSize={10} />
+              <YAxis fontSize={11} />
+              <Tooltip />
+              <Bar dataKey="value" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-bold mb-1">Severity Distribution</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Share of reports by assessed severity.</p>
+          <div className="grid grid-cols-2 items-center gap-4">
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie data={bySeverity} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={45} outerRadius={80} paddingAngle={2}>
+                  {bySeverity.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="space-y-2">
+              {bySeverity.map((s, i) => (
+                <div key={s.name} className="flex items-center justify-between text-sm">
+                  <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-sm" style={{ background: COLORS[i] }} />{s.name}</span>
+                  <span className="font-bold">{s.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5 md:col-span-2">
+          <h3 className="font-bold mb-1">30-Day Report Trend vs Resolution</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Daily inflow vs same-day closures. Watch the gap widen → indicates SLA pressure.</p>
+          <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={trend30}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+              <XAxis dataKey="day" fontSize={9} interval={2} />
+              <YAxis fontSize={11} />
+              <Tooltip />
+              <Line type="monotone" dataKey="count" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} name="Reports" />
+              <Line type="monotone" dataKey="resolved" stroke="hsl(var(--success))" strokeWidth={2.5} dot={false} name="Resolved" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5 md:col-span-2">
+          <h3 className="font-bold mb-1">Hour × Day Heatmap</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Volume by day-of-week and hour. Darkest cells indicate peak reporting windows.</p>
+          <div className="overflow-x-auto">
+            <table className="text-[10px] font-mono">
+              <thead>
+                <tr>
+                  <th className="w-8"></th>
+                  {Array.from({ length: 24 }).map((_, h) => (
+                    <th key={h} className="w-6 text-center text-muted-foreground font-normal">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {heatmap.map((row, d) => (
+                  <tr key={d}>
+                    <td className="pr-2 text-right font-semibold text-muted-foreground">{DAYS[d]}</td>
+                    {row.map((v, h) => {
+                      const intensity = v / maxCell;
+                      return (
+                        <td key={h} className="p-0.5">
+                          <div
+                            title={`${DAYS[d]} ${h}:00 — ${v} reports`}
+                            className="w-6 h-6 rounded-sm flex items-center justify-center"
+                            style={{
+                              background: `hsl(var(--accent) / ${0.08 + intensity * 0.85})`,
+                              color: intensity > 0.55 ? "white" : "hsl(var(--foreground))",
+                            }}
+                          >
+                            {v > 0 ? v : ""}
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-bold mb-1">Category × Severity</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Which categories are driving high-severity load.</p>
+          <ResponsiveContainer width="100%" height={260}>
+            <BarChart data={catSev}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+              <XAxis dataKey="name" fontSize={9} />
+              <YAxis fontSize={11} />
+              <Tooltip />
+              <Bar dataKey="High" stackId="s" fill="hsl(var(--accent))" />
+              <Bar dataKey="Medium" stackId="s" fill="hsl(var(--gold))" />
+              <Bar dataKey="Low" stackId="s" fill="hsl(var(--success))" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-bold mb-1">Status Funnel</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Pipeline from citizen report → officer resolution.</p>
+          <div className="space-y-2">
+            {byStatus.map((s, i) => {
+              const pct = reports.length ? (s.value / reports.length) * 100 : 0;
+              return (
+                <div key={s.name}>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="font-semibold">{s.name}</span>
+                    <span className="text-muted-foreground">{s.value} · {pct.toFixed(0)}%</span>
+                  </div>
+                  <div className="h-6 rounded-md bg-secondary overflow-hidden">
+                    <div className="h-full rounded-md" style={{ width: `${pct}%`, background: COLORS[i] }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5 md:col-span-2">
+          <h3 className="font-bold mb-1">Repeat Hotspots (≥ 3 reports at same coordinates)</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Locations that warrant sustained intervention: patrol, CCTV, community outreach.</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary/40 text-[10px] uppercase text-muted-foreground">
+                <tr>
+                  <th className="text-left px-3 py-2">Zone</th>
+                  <th className="text-left px-3 py-2">Coordinates</th>
+                  <th className="text-right px-3 py-2">Reports</th>
+                  <th className="text-left px-3 py-2">Top Category</th>
+                  <th className="text-left px-3 py-2">Severity</th>
+                  <th className="text-left px-3 py-2">Last Activity</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {repeat.slice(0, 10).map((z: any) => {
+                  const lk = locationKey(z.centerLat, z.centerLng);
+                  const top = Object.entries(z.categories).sort((a: any, b: any) => b[1] - a[1])[0];
+                  return (
+                    <tr key={z.zoneId} className="border-t border-border hover:bg-secondary/20">
+                      <td className="px-3 py-2 font-semibold">{z.label}</td>
+                      <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">{z.centerLat.toFixed(4)}, {z.centerLng.toFixed(4)}</td>
+                      <td className="px-3 py-2 text-right font-bold">{z.reportCount}</td>
+                      <td className="px-3 py-2">{top?.[0]}</td>
+                      <td className="px-3 py-2">
+                        <span className={`badge-pill text-[9px] ${z.severity === "High" ? "badge-crimson" : z.severity === "Medium" ? "badge-gold" : "badge-success"}`}>{z.severity}</span>
+                      </td>
+                      <td className="px-3 py-2 text-xs text-muted-foreground">{new Date(z.lastReportAt).toLocaleString("en-IN")}</td>
+                      <td className="px-3 py-2 text-right">
+                        <Link to={`/command/location/${lk}`}><Button size="sm" variant="outline">Dossier</Button></Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {repeat.length === 0 && <tr><td colSpan={7} className="text-center py-6 text-xs text-muted-foreground">No repeat hotspots yet.</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -781,7 +1110,7 @@ function AnalyticsSection({ reports, zones }: any) {
 // -------- Settings --------
 function SettingsSection() {
   return (
-    <div className="max-w-2xl space-y-4">
+    <div className="grid lg:grid-cols-2 gap-4">
       <div className="rounded-2xl border border-border bg-card p-5">
         <h3 className="font-bold mb-2">Command Centre Configuration</h3>
         <p className="text-sm text-muted-foreground">Configure alert thresholds, patrol zones, and officer assignments.</p>
@@ -802,11 +1131,79 @@ function SettingsSection() {
             <label className="text-xs font-semibold text-muted-foreground">SLA — Medium</label>
             <Input defaultValue="2 hours" />
           </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground">SLA — Low</label>
+            <Input defaultValue="8 hours" />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground">Report retention</label>
+            <Input defaultValue="7 years (as per PDPA)" />
+          </div>
         </div>
         <Button className="mt-4">Save changes</Button>
       </div>
 
       <div className="rounded-2xl border border-border bg-card p-5">
+        <h3 className="font-bold mb-2">Escalation Matrix</h3>
+        <p className="text-sm text-muted-foreground mb-3">Who gets notified on breach of SLA at each severity tier.</p>
+        <div className="space-y-2 text-sm">
+          {[
+            { tier: "High · L0", to: "On-duty SI + Station SHO", channel: "SMS + Push + Radio" },
+            { tier: "High · L1 (15m)", to: "DSP Ludhiana", channel: "SMS + Call" },
+            { tier: "High · L2 (30m)", to: "SP Ludhiana Rural", channel: "Call" },
+            { tier: "Medium · L0", to: "On-duty SI", channel: "Push" },
+            { tier: "Medium · L1 (60m)", to: "SHO", channel: "SMS + Push" },
+            { tier: "Low · L0", to: "PS Duty Officer", channel: "Push" },
+          ].map((r) => (
+            <div key={r.tier} className="grid grid-cols-3 gap-3 p-2 rounded bg-secondary/40 text-xs">
+              <div className="font-semibold">{r.tier}</div>
+              <div>{r.to}</div>
+              <div className="text-muted-foreground">{r.channel}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <h3 className="font-bold mb-2">Integrations</h3>
+        <p className="text-sm text-muted-foreground mb-3">External systems bridged to the Command Centre.</p>
+        <div className="space-y-2 text-sm">
+          {[
+            { name: "Dial-112 (ERSS)", status: "Connected", color: "badge-success" },
+            { name: "CCTNS — Punjab Police", status: "Connected", color: "badge-success" },
+            { name: "Safe City CCTV Grid — Ludhiana", status: "Connected", color: "badge-success" },
+            { name: "NCB Narcotics DB", status: "Read-only", color: "badge-gold" },
+            { name: "SMS Gateway (Govt.)", status: "Connected", color: "badge-success" },
+            { name: "Aadhaar / e-KYC", status: "Not required (anonymous app)", color: "badge-blue" },
+          ].map((i) => (
+            <div key={i.name} className="flex items-center justify-between p-2 rounded bg-secondary/40">
+              <span className="font-medium">{i.name}</span>
+              <span className={`badge-pill text-[9px] ${i.color}`}>{i.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <h3 className="font-bold mb-2">Audit & Compliance</h3>
+        <div className="space-y-2 text-sm">
+          {[
+            ["Data residency", "India-only (Mumbai + Chennai regions)"],
+            ["Encryption at rest", "AES-256"],
+            ["Encryption in transit", "TLS 1.3"],
+            ["Access log retention", "5 years"],
+            ["PII collection", "None (100% anonymous citizen app)"],
+            ["Compliance", "DPDP Act 2023, CERT-In, MeitY guidelines"],
+          ].map(([k, v]) => (
+            <div key={k} className="flex items-center justify-between text-xs p-2 rounded bg-secondary/40">
+              <span className="font-semibold">{k}</span>
+              <span className="text-muted-foreground">{v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-card p-5 lg:col-span-2">
         <h3 className="font-bold mb-2">Demo data</h3>
         <p className="text-sm text-muted-foreground">
           Reset local demo storage and re-seed with the latest richer dataset (84 reports, weighted hotspots, hour-of-day patterns).
@@ -827,6 +1224,7 @@ function SettingsSection() {
     </div>
   );
 }
+
 
 
 // -------- Report Dialog --------
