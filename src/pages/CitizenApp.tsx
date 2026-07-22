@@ -111,8 +111,9 @@ export default function CitizenApp() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex justify-center">
-      <div className="w-full max-w-md flex flex-col bg-card min-h-screen shadow-xl">
+    <MobileFrame caption={`NashaMukt Punjab · ${tab === "report" ? "Report Incident" : tab === "history" ? "My Reports" : "Safety Zones"}`}>
+      <div className="w-full min-h-full flex flex-col bg-card">
+
         {/* Header */}
         <div className="bg-gradient-to-br from-primary to-accent text-primary-foreground px-5 pt-6 pb-8 rounded-b-3xl">
           <div className="flex items-center justify-between">
