@@ -3,6 +3,7 @@ import { Shield, EyeOff, Lock, MapPin } from "lucide-react";
 import { setUser, seedIfEmpty } from "@/lib/nashaStore";
 import { Button } from "@/components/ui/button";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
+import MobileFrame from "@/components/MobileFrame";
 
 export default function CitizenLogin() {
   const nav = useNavigate();
