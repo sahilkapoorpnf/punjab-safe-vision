@@ -890,11 +890,16 @@ function ReportDialog({ report, onClose }: { report: Report | null; onClose: () 
             </div>
           </div>
         </div>
-        <div className="flex gap-2 pt-2 border-t border-border">
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
+          <Link to={`/command/report/${report.id}`} onClick={onClose}>
+            <Button size="sm" variant="secondary"><ExternalLink className="w-3 h-3 mr-1" /> Open full detail</Button>
+          </Link>
+          <div className="flex-1" />
           <Button size="sm" variant="outline" onClick={() => setStatus("Assigned")}>Assign to me</Button>
           <Button size="sm" variant="outline" onClick={() => setStatus("In Progress")}>Mark In Progress</Button>
           <Button size="sm" onClick={() => setStatus("Resolved")}>Mark Resolved</Button>
         </div>
+
       </DialogContent>
     </Dialog>
   );
