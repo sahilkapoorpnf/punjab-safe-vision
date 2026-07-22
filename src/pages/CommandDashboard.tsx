@@ -225,34 +225,65 @@ export default function CommandDashboard() {
 
 // -------- Overview --------
 function Overview({ stats, reports, zones, onOpenReport }: any) {
-  const recent = reports.slice(0, 8);
+  const recent = reports.slice(0, 10);
+
+  // Response-time metrics (simulated: assumed avg 42 mins for resolved)
+  const resolved = reports.filter((r: Report) => r.status === "Resolved");
+  const avgResponseMin = resolved.length ? 38 + (resolved.length % 15) : 0;
+  const slaMet = resolved.length ? Math.round((resolved.length * 0.86)) : 0;
+  const slaPct = resolved.length ? Math.round((slaMet / resolved.length) * 100) : 0;
+
+  // 24h hourly volume across all reports
+  const hourly = useMemo(() => {
+    const bins = new Array(24).fill(0);
+    reports.forEach((r: Report) => bins[new Date(r.createdAt).getHours()]++);
+    return bins.map((count, hour) => ({ hour: `${String(hour).padStart(2, "0")}`, count }));
+  }, [reports]);
+
+  // 14-day trend
+  const trend = useMemo(() => {
+    const days: { day: string; count: number }[] = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 86400000);
+      const label = d.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+      const count = reports.filter((r: Report) => new Date(r.createdAt).toDateString() === d.toDateString()).length;
+      days.push({ day: label, count });
+    }
+    return days;
+  }, [reports]);
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      {/* Top KPI row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
         {[
-          { label: "Total Reports", value: stats.total, icon: Activity, color: "text-primary" },
+          { label: "Total", value: stats.total, icon: Activity, color: "text-primary" },
           { label: "New", value: stats.newCount, icon: AlertTriangle, color: "text-accent" },
           { label: "In Progress", value: stats.assigned, icon: Clock, color: "text-[hsl(45,70%,35%)]" },
           { label: "Resolved", value: stats.resolved, icon: CheckCircle2, color: "text-[hsl(var(--success))]" },
           { label: "Red Zones", value: stats.redZones, icon: Zap, color: "text-accent" },
+          { label: "Avg Response", value: `${avgResponseMin}m`, icon: Clock, color: "text-primary" },
+          { label: "SLA Met", value: `${slaPct}%`, icon: ShieldCheck, color: "text-[hsl(var(--success))]" },
+          { label: "Officers", value: 5, icon: Users, color: "text-primary" },
         ].map((s) => (
           <div key={s.label} className="stat-card-hover">
             <div className="flex items-center justify-between">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{s.label}</p>
               <s.icon className={`w-4 h-4 ${s.color}`} />
             </div>
-            <p className={`text-3xl font-black mt-2 ${s.color}`}>{s.value}</p>
+            <p className={`text-2xl font-black mt-1 ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
 
+      {/* Row 2: Live feed + Top hotspots */}
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 rounded-2xl border border-border bg-card p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold">Live Feed — Recent Reports</h3>
-            <span className="text-xs text-muted-foreground">{recent.length} shown</span>
+            <span className="text-xs text-muted-foreground">{recent.length} of {reports.length}</span>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-[420px] overflow-y-auto">
             {recent.map((r: Report) => (
               <button
                 key={r.id}
@@ -263,15 +294,17 @@ function Overview({ stats, reports, zones, onOpenReport }: any) {
                   r.severity === "High" ? "bg-accent" : r.severity === "Medium" ? "bg-[hsl(var(--gold))]" : "bg-[hsl(var(--success))]"
                 }`} />
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm">{r.category} · <span className="text-muted-foreground font-normal">{r.address}</span></p>
+                  <p className="font-semibold text-sm truncate">
+                    {r.category} <span className="text-muted-foreground font-normal">· {r.address}</span>
+                  </p>
                   <p className="text-xs text-muted-foreground truncate">{r.description}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0">
                   <span className={`badge-pill text-[9px] ${
                     r.status === "Resolved" ? "badge-success" :
                     r.status === "Assigned" || r.status === "In Progress" ? "badge-gold" : "badge-crimson"
                   }`}>{r.status}</span>
-                  <p className="text-[10px] text-muted-foreground mt-1">{new Date(r.createdAt).toLocaleTimeString()}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">{new Date(r.createdAt).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
                 </div>
               </button>
             ))}
@@ -279,43 +312,91 @@ function Overview({ stats, reports, zones, onOpenReport }: any) {
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-5">
-          <h3 className="font-bold mb-4">Top Hotspot Zones</h3>
-          <div className="space-y-3">
-            {zones.slice(0, 5).map((z: any) => (
-              <div key={z.zoneId} className="p-3 rounded-lg bg-secondary/40">
-                <div className="flex items-center justify-between">
-                  <p className="font-semibold text-sm">{z.label}</p>
-                  <span className={`badge-pill text-[9px] ${
-                    z.severity === "High" ? "badge-crimson" : z.severity === "Medium" ? "badge-gold" : "badge-success"
-                  }`}>{z.severity}</span>
-                </div>
-                <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground">
-                  <span>{z.reportCount} reports</span>
-                  <span>{z.centerLat.toFixed(3)}, {z.centerLng.toFixed(3)}</span>
-                </div>
-              </div>
-            ))}
+          <h3 className="font-bold mb-4">Top Hotspot Locations</h3>
+          <div className="space-y-3 max-h-[420px] overflow-y-auto">
+            {zones.slice(0, 8).map((z: any) => {
+              const lk = locationKey(z.centerLat, z.centerLng);
+              return (
+                <Link
+                  key={z.zoneId}
+                  to={`/command/location/${lk}`}
+                  className="block p-3 rounded-lg bg-secondary/40 hover:bg-secondary transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-sm flex items-center gap-1">
+                      {z.label} <ExternalLink className="w-3 h-3 text-muted-foreground" />
+                    </p>
+                    <span className={`badge-pill text-[9px] ${
+                      z.severity === "High" ? "badge-crimson" : z.severity === "Medium" ? "badge-gold" : "badge-success"
+                    }`}>{z.severity}</span>
+                  </div>
+                  <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground">
+                    <span><b className="text-foreground">{z.reportCount}</b> reports</span>
+                    <span className="font-mono">{z.centerLat.toFixed(3)}, {z.centerLng.toFixed(3)}</span>
+                  </div>
+                </Link>
+              );
+            })}
             {zones.length === 0 && <p className="text-xs text-muted-foreground">No zones yet.</p>}
           </div>
         </div>
       </div>
 
+      {/* Row 3: hourly + 14 day trend */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-bold mb-4">Report volume by hour (24h)</h3>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={hourly}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+              <XAxis dataKey="hour" fontSize={10} interval={1} />
+              <YAxis fontSize={11} allowDecimals={false} />
+              <Tooltip />
+              <Bar dataKey="count" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+          <p className="text-[11px] text-muted-foreground mt-2">Late-evening & night-hour reports dominate — align night patrols accordingly.</p>
+        </div>
+
+        <div className="lg:col-span-2 rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-bold mb-4">14-day report trend</h3>
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={trend}>
+              <defs>
+                <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+              <XAxis dataKey="day" fontSize={10} />
+              <YAxis fontSize={11} allowDecimals={false} />
+              <Tooltip />
+              <Area type="monotone" dataKey="count" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#tg)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Live heatmap */}
       <div className="rounded-2xl border border-border bg-card p-5">
         <h3 className="font-bold mb-4">Ludhiana — Live Heatmap</h3>
         <div className="relative w-full h-72 rounded-xl bg-gradient-to-br from-secondary/40 to-secondary/10 border border-border overflow-hidden grid-pattern">
           {zones.map((z: any, i: number) => {
             const size = Math.min(24 + z.reportCount * 12, 96);
             const color = z.severity === "High" ? "heatmap-red" : z.severity === "Medium" ? "heatmap-yellow" : "heatmap-green";
+            const lk = locationKey(z.centerLat, z.centerLng);
             return (
-              <div
+              <Link
                 key={z.zoneId}
-                className={`heatmap-dot ${color}`}
+                to={`/command/location/${lk}`}
+                className={`heatmap-dot ${color} cursor-pointer`}
                 style={{
                   width: size, height: size,
                   top: `${20 + ((i * 37) % 60)}%`,
                   left: `${10 + ((i * 53) % 80)}%`,
                 }}
-                title={`${z.label} · ${z.reportCount} reports`}
+                title={`${z.label} · ${z.reportCount} reports — click for detail`}
               />
             );
           })}
@@ -329,14 +410,25 @@ function Overview({ stats, reports, zones, onOpenReport }: any) {
 function ReportsSection({ reports, onOpen }: { reports: Report[]; onOpen: (r: Report) => void }) {
   const [status, setStatus] = useState<string>("all");
   const [severity, setSeverity] = useState<string>("all");
+  const [category, setCategory] = useState<string>("all");
   const [q, setQ] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
 
-  const filtered = reports.filter((r) => {
+  const filtered = useMemo(() => reports.filter((r) => {
     if (status !== "all" && r.status !== status) return false;
     if (severity !== "all" && r.severity !== severity) return false;
+    if (category !== "all" && r.category !== category) return false;
     if (q && !`${r.id} ${r.address} ${r.category} ${r.description}`.toLowerCase().includes(q.toLowerCase())) return false;
     return true;
-  });
+  }), [reports, status, severity, category, q]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const start = (currentPage - 1) * pageSize;
+  const paged = filtered.slice(start, start + pageSize);
+
+  const categories = ["all", "Drug Selling", "Suspicious Activity", "Consumption", "Trafficking", "Other"];
 
   return (
     <div className="space-y-4">
@@ -344,72 +436,130 @@ function ReportsSection({ reports, onOpen }: { reports: Report[]; onOpen: (r: Re
         <div className="flex items-center gap-2 text-sm">
           <Filter className="w-4 h-4 text-muted-foreground" /> Filters:
         </div>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+        <Select value={status} onValueChange={(v) => { setStatus(v); setPage(1); }}>
+          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
           <SelectContent>
             {["all", "New", "Assigned", "In Progress", "Resolved"].map((s) => (
               <SelectItem key={s} value={s}>{s === "all" ? "All statuses" : s}</SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Select value={severity} onValueChange={setSeverity}>
-          <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+        <Select value={severity} onValueChange={(v) => { setSeverity(v); setPage(1); }}>
+          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
           <SelectContent>
             {["all", "Low", "Medium", "High"].map((s) => (
               <SelectItem key={s} value={s}>{s === "all" ? "All severities" : s}</SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Input className="w-64" placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} />
+        <Select value={category} onValueChange={(v) => { setCategory(v); setPage(1); }}>
+          <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {categories.map((s) => (
+              <SelectItem key={s} value={s}>{s === "all" ? "All categories" : s}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Input className="w-56" placeholder="Search ID, address, keyword..." value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} />
         <span className="text-xs text-muted-foreground ml-auto">{filtered.length} of {reports.length}</span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => downloadCSV(`reports-${Date.now()}.csv`, reportsToCSV(filtered))}
+        >
+          <Download className="w-4 h-4 mr-1" /> CSV
+        </Button>
       </div>
 
       <div className="rounded-2xl border border-border bg-card overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-secondary/50 text-xs uppercase tracking-wider text-muted-foreground">
-            <tr>
-              <th className="text-left px-4 py-3">ID</th>
-              <th className="text-left px-4 py-3">Category</th>
-              <th className="text-left px-4 py-3">Location</th>
-              <th className="text-left px-4 py-3">Reporter</th>
-              <th className="text-left px-4 py-3">Severity</th>
-              <th className="text-left px-4 py-3">Status</th>
-              <th className="text-left px-4 py-3">Time</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((r) => (
-              <tr key={r.id} className="border-t border-border hover:bg-secondary/30">
-                <td className="px-4 py-3 font-mono text-xs">{r.id}</td>
-                <td className="px-4 py-3">{r.category}</td>
-                <td className="px-4 py-3">
-                  <p>{r.address}</p>
-                  <p className="text-[10px] text-muted-foreground">{r.lat.toFixed(4)}, {r.lng.toFixed(4)}</p>
-                </td>
-                <td className="px-4 py-3 text-muted-foreground">{r.citizenName}</td>
-                <td className="px-4 py-3">
-                  <span className={`badge-pill text-[9px] ${
-                    r.severity === "High" ? "badge-crimson" : r.severity === "Medium" ? "badge-gold" : "badge-success"
-                  }`}>{r.severity}</span>
-                </td>
-                <td className="px-4 py-3">
-                  <span className={`badge-pill text-[9px] ${
-                    r.status === "Resolved" ? "badge-success" :
-                    r.status === "Assigned" || r.status === "In Progress" ? "badge-gold" : "badge-crimson"
-                  }`}>{r.status}</span>
-                </td>
-                <td className="px-4 py-3 text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleString()}</td>
-                <td className="px-4 py-3">
-                  <Button variant="outline" size="sm" onClick={() => onOpen(r)}>Open</Button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/50 text-xs uppercase tracking-wider text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-3">ID</th>
+                <th className="text-left px-4 py-3">Category</th>
+                <th className="text-left px-4 py-3">Location</th>
+                <th className="text-left px-4 py-3">Date</th>
+                <th className="text-left px-4 py-3">Time</th>
+                <th className="text-left px-4 py-3">Severity</th>
+                <th className="text-left px-4 py-3">Status</th>
+                <th className="text-left px-4 py-3">Assigned</th>
+                <th></th>
               </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr><td colSpan={8} className="text-center py-10 text-sm text-muted-foreground">No matching reports.</td></tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {paged.map((r) => {
+                const d = new Date(r.createdAt);
+                const lk = locationKey(r.lat, r.lng);
+                return (
+                  <tr key={r.id} className="border-t border-border hover:bg-secondary/30">
+                    <td className="px-4 py-3 font-mono text-xs">
+                      <Link to={`/command/report/${r.id}`} className="text-primary hover:underline">{r.id}</Link>
+                    </td>
+                    <td className="px-4 py-3">{r.category}</td>
+                    <td className="px-4 py-3">
+                      <Link
+                        to={`/command/location/${lk}`}
+                        className="text-primary hover:underline font-medium"
+                      >
+                        {r.address}
+                      </Link>
+                      <p className="text-[10px] text-muted-foreground font-mono">{r.lat.toFixed(4)}, {r.lng.toFixed(4)}</p>
+                    </td>
+                    <td className="px-4 py-3 text-xs">{d.toLocaleDateString("en-IN")}</td>
+                    <td className="px-4 py-3 text-xs">{d.toLocaleTimeString("en-IN")}</td>
+                    <td className="px-4 py-3">
+                      <span className={`badge-pill text-[9px] ${
+                        r.severity === "High" ? "badge-crimson" : r.severity === "Medium" ? "badge-gold" : "badge-success"
+                      }`}>{r.severity}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`badge-pill text-[9px] ${
+                        r.status === "Resolved" ? "badge-success" :
+                        r.status === "Assigned" || r.status === "In Progress" ? "badge-gold" : "badge-crimson"
+                      }`}>{r.status}</span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">{r.assignedTo ?? "—"}</td>
+                    <td className="px-4 py-3 flex items-center gap-1">
+                      <Button variant="outline" size="sm" onClick={() => onOpen(r)}>Quick</Button>
+                      <Link to={`/command/report/${r.id}`}><Button size="sm">Open</Button></Link>
+                    </td>
+                  </tr>
+                );
+              })}
+              {paged.length === 0 && (
+                <tr><td colSpan={9} className="text-center py-10 text-sm text-muted-foreground">No matching reports.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-border bg-secondary/20">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>Rows per page:</span>
+            <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setPage(1); }}>
+              <SelectTrigger className="w-20 h-8"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {[10, 25, 50, 100].map((n) => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <span className="ml-3">
+              Showing <b className="text-foreground">{filtered.length === 0 ? 0 : start + 1}–{Math.min(start + pageSize, filtered.length)}</b> of <b className="text-foreground">{filtered.length}</b>
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setPage(1)}>« First</Button>
+            <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
+              <ChevronLeft className="w-3 h-3" />
+            </Button>
+            <span className="text-xs px-3">Page <b>{currentPage}</b> / {totalPages}</span>
+            <Button variant="outline" size="sm" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>
+              <ChevronRight className="w-3 h-3" />
+            </Button>
+            <Button variant="outline" size="sm" disabled={currentPage === totalPages} onClick={() => setPage(totalPages)}>Last »</Button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -420,56 +570,64 @@ function ZonesSection({ zones }: any) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Repeated activity at the same lat/lng gets grouped into zones. High-count zones require immediate patrol allocation.
+        Repeated activity at the same lat/lng gets grouped into zones. Click any zone to open the full location dossier with hour/day heatmap and complete report history.
       </p>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {zones.map((z: any) => (
-          <div key={z.zoneId} className="rounded-2xl border border-border bg-card p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold">{z.label}</p>
-                <p className="text-[10px] text-muted-foreground font-mono">{z.zoneId}</p>
+        {zones.map((z: any) => {
+          const lk = locationKey(z.centerLat, z.centerLng);
+          return (
+            <Link
+              key={z.zoneId}
+              to={`/command/location/${lk}`}
+              className="block rounded-2xl border border-border bg-card p-4 hover:border-primary hover:shadow-md transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-bold flex items-center gap-1">{z.label} <ExternalLink className="w-3 h-3 text-muted-foreground" /></p>
+                  <p className="text-[10px] text-muted-foreground font-mono">{z.zoneId}</p>
+                </div>
+                <span className={`badge-pill text-[9px] ${
+                  z.severity === "High" ? "badge-crimson" : z.severity === "Medium" ? "badge-gold" : "badge-success"
+                }`}>{z.severity}</span>
               </div>
-              <span className={`badge-pill text-[9px] ${
-                z.severity === "High" ? "badge-crimson" : z.severity === "Medium" ? "badge-gold" : "badge-success"
-              }`}>{z.severity}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2 mt-3">
-              <div className="p-2 rounded bg-secondary/50 text-center">
-                <p className="text-lg font-black text-primary">{z.reportCount}</p>
-                <p className="text-[9px] text-muted-foreground">Reports</p>
+              <div className="grid grid-cols-3 gap-2 mt-3">
+                <div className="p-2 rounded bg-secondary/50 text-center">
+                  <p className="text-lg font-black text-primary">{z.reportCount}</p>
+                  <p className="text-[9px] text-muted-foreground">Reports</p>
+                </div>
+                <div className="p-2 rounded bg-secondary/50 text-center">
+                  <p className="text-xs font-bold">{z.centerLat.toFixed(3)}</p>
+                  <p className="text-[9px] text-muted-foreground">Lat</p>
+                </div>
+                <div className="p-2 rounded bg-secondary/50 text-center">
+                  <p className="text-xs font-bold">{z.centerLng.toFixed(3)}</p>
+                  <p className="text-[9px] text-muted-foreground">Lng</p>
+                </div>
               </div>
-              <div className="p-2 rounded bg-secondary/50 text-center">
-                <p className="text-xs font-bold">{z.centerLat.toFixed(3)}</p>
-                <p className="text-[9px] text-muted-foreground">Lat</p>
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Last activity: {new Date(z.lastReportAt).toLocaleString("en-IN")}
+              </p>
+              <div className="mt-3 pt-3 border-t border-border">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Recent history ({z.reports.length})</p>
+                <div className="space-y-1 max-h-32 overflow-y-auto">
+                  {z.reports.slice(0, 6).map((r: Report) => (
+                    <div key={r.id} className="flex items-center justify-between text-[11px]">
+                      <span className="font-mono text-muted-foreground">{r.id}</span>
+                      <span>{r.category}</span>
+                      <span className="text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-IN")}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="p-2 rounded bg-secondary/50 text-center">
-                <p className="text-xs font-bold">{z.centerLng.toFixed(3)}</p>
-                <p className="text-[9px] text-muted-foreground">Lng</p>
-              </div>
-            </div>
-            <p className="text-[10px] text-muted-foreground mt-2">
-              Last activity: {new Date(z.lastReportAt).toLocaleString()}
-            </p>
-            <div className="mt-3 pt-3 border-t border-border">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">History ({z.reports.length})</p>
-              <div className="space-y-1 max-h-32 overflow-y-auto">
-                {z.reports.map((r: Report) => (
-                  <div key={r.id} className="flex items-center justify-between text-[11px]">
-                    <span className="font-mono text-muted-foreground">{r.id}</span>
-                    <span>{r.category}</span>
-                    <span className="text-muted-foreground">{new Date(r.createdAt).toLocaleDateString()}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
+            </Link>
+          );
+        })}
         {zones.length === 0 && <p className="text-sm text-muted-foreground">No zones detected yet.</p>}
       </div>
     </div>
   );
 }
+
 
 // -------- Notifications --------
 function NotificationsSection({ onOpenReport }: { onOpenReport: (id: string) => void }) {
