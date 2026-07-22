@@ -58,7 +58,7 @@ export default function CitizenApp() {
   const [category, setCategory] = useState<ReportCategory>("Drug Selling");
   const [description, setDescription] = useState("");
   const [locIdx, setLocIdx] = useState(0);
-  const [anonymous, setAnonymous] = useState(true);
+  const anonymous = true;
   const [severity, setSeverity] = useState<"Low" | "Medium" | "High">("High");
   const [evidence, setEvidence] = useState<Evidence[]>([]);
 
