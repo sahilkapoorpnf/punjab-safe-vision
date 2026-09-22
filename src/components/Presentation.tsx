@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import ExecutiveMission from "./slides/ExecutiveMission";
 import ExecutiveScale from "./slides/ExecutiveScale";
 import ExecutiveEvidence from "./slides/ExecutiveEvidence";
-import ExecutiveGovernmentAction from "./slides/ExecutiveGovernmentAction";
 import ExecutiveGovernmentMomentum from "./slides/ExecutiveGovernmentMomentum";
 import ExecutiveCommand from "./slides/ExecutiveCommand";
 import ExecutiveTransition from "./slides/ExecutiveTransition";
@@ -35,7 +34,6 @@ const slides = [
   ExecutiveMission,
   ExecutiveScale,
   ExecutiveEvidence,
-  ExecutiveGovernmentAction,
   ExecutiveGovernmentMomentum,
   ExecutiveCommand,
   ExecutiveTransition,
