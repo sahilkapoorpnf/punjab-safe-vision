@@ -5,9 +5,9 @@ import zeroToleranceRelease from "@/assets/cm-intro/news-zero-tolerance-crop.jpg
 import modernisationRelease from "@/assets/cm-intro/news-modernisation-crop.jpg.asset.json";
 
 const evidence = [
-  { image: stfRelease, date: "15 JAN 2025", title: "Special Task Force", source: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=38128&Language=1" },
-  { image: zeroToleranceRelease, date: "29 JUL 2025", title: "Zero-Tolerance", source: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=41814&Language=1" },
-  { image: modernisationRelease, date: "09 JAN 2026", title: "Modern Anti-Chitta Fleet", source: "http://www.himachalpr.gov.in/OneNews.aspx?ID=44935&Language=1" },
+  { image: stfRelease.url, date: "15 JAN 2025", title: "Special Task Force", source: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=38128&Language=1" },
+  { image: zeroToleranceRelease.url, date: "29 JUL 2025", title: "Zero-Tolerance", source: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=41814&Language=1" },
+  { image: modernisationRelease.url, date: "09 JAN 2026", title: "Modern Anti-Chitta Fleet", source: "http://www.himachalpr.gov.in/OneNews.aspx?ID=44935&Language=1" },
 ];
 
 export default function SlideNewsEvidence() {
