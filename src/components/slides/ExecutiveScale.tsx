@@ -1,32 +1,29 @@
 import ExecutiveShell from "./ExecutiveShell";
-import SourceLink from "./SourceLink";
+import { Activity, FileText, Skull, TrendingUp } from "lucide-react";
 
 const totals = [
-  { value: "6,246", label: "NDPS cases", period: "2023–2025*" },
-  { value: "66", label: "Reported overdose deaths", period: "2023–2025" },
-  { value: "1,967", label: "NDPS cases", period: "Jan–Nov 2025" },
-  { value: "1,537", label: "NDPS cases", period: "Jan–Nov 2024" },
+  { icon: FileText, value: "6,246", label: "NDPS CASES", period: "2023–2025*", tone: "text-primary" },
+  { icon: Skull, value: "66", label: "OVERDOSE DEATHS", period: "2023–2025", tone: "text-accent" },
+  { icon: TrendingUp, value: "1,967", label: "CASES", period: "JAN–NOV 2025", tone: "text-success" },
+  { icon: Activity, value: "1,537", label: "CASES", period: "JAN–NOV 2024", tone: "text-gold" },
 ];
 
 export default function ExecutiveScale() {
   return (
-    <ExecutiveShell dark eyebrow="Verified public record · Policy briefing">
+    <ExecutiveShell eyebrow="Verified data · सत्यापित आंकड़े">
       <h2 className="slide-title text-4xl uppercase leading-none md:text-6xl">The data shows the scale</h2>
-      <div className="mt-9 grid gap-px overflow-hidden border border-primary-foreground/15 bg-primary-foreground/15 sm:grid-cols-2 lg:grid-cols-4">
-        {totals.map((item) => <div key={item.period} className="bg-navy p-6 md:p-8"><p className="text-4xl font-black md:text-5xl">{item.value}</p><p className="mt-2 text-sm font-bold">{item.label}</p><p className="mt-1 text-xs text-primary-foreground/55">{item.period}</p></div>)}
+      <p className="mt-2 text-lg font-bold text-muted-foreground">चुनौती का वास्तविक पैमाना</p>
+      <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {totals.map((item) => <div key={item.period} className="border bg-card p-5 shadow-sm"><item.icon className={`h-6 w-6 ${item.tone}`} /><p className="mt-4 text-4xl font-black md:text-5xl">{item.value}</p><p className="mt-1 text-xs font-black">{item.label}</p><p className="mt-1 text-[10px] text-muted-foreground">{item.period}</p></div>)}
       </div>
-      <div className="mt-8 grid gap-8 md:grid-cols-[.65fr_1.35fr] md:items-end">
-        <div><p className="text-xs font-black uppercase text-primary-foreground/55">NDPS cases, Jan–Nov</p><p className="mt-2 max-w-sm text-sm text-primary-foreground/65">A neutral comparison of reported case registrations. No causal interpretation is applied.</p></div>
-        <div className="space-y-5 border-l border-primary-foreground/15 pl-5">
-          <div><div className="mb-2 flex justify-between text-sm font-bold"><span>2024</span><span>1,537</span></div><div className="h-8 w-[78%] bg-primary-foreground/35" /></div>
-          <div><div className="mb-2 flex justify-between text-sm font-bold"><span>2025</span><span>1,967</span></div><div className="h-8 w-full bg-accent" /></div>
+      <div className="mt-6 grid gap-6 border-t pt-6 md:grid-cols-[.35fr_1.65fr] md:items-center">
+        <div><p className="text-xs font-black uppercase text-muted-foreground">Jan–Nov comparison</p><p className="mt-1 text-2xl font-black text-accent">+28%</p><p className="text-xs text-muted-foreground">reported cases</p></div>
+        <div className="space-y-4">
+          <div className="grid grid-cols-[52px_1fr_58px] items-center gap-3 text-xs font-black"><span>2024</span><div className="h-8 bg-primary/20"><div className="h-full w-[78%] bg-primary" /></div><span>1,537</span></div>
+          <div className="grid grid-cols-[52px_1fr_58px] items-center gap-3 text-xs font-black"><span>2025</span><div className="h-8 bg-accent/15"><div className="h-full w-full bg-accent" /></div><span>1,967</span></div>
         </div>
       </div>
-      <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-primary-foreground/15 pt-4">
-        <SourceLink dark href="https://www.tribuneindia.com/news/himachal/66-drug-overdose-deaths-in-3-years-6200-cases-lodged-himachal-cm-sukhu/">The Tribune · 25 Mar 2026 · Vidhan Sabha statement</SourceLink>
-        <SourceLink dark href="https://www.tribuneindia.com/news/himachal/as-cases-rise-28-govt-launches-decisive-battle-against-narcotics/">The Tribune · 1 Jan 2026 · HP Police data</SourceLink>
-        <p className="text-[10px] text-primary-foreground/45">*Reported for Jan 2023–Jan 2026; no January 2026 overdose death was reported.</p>
-      </div>
+      <p className="mt-5 text-[9px] font-semibold text-muted-foreground">Sources: Himachal Pradesh Vidhan Sabha statement / The Tribune · 25 Mar 2026; HP Police data / The Tribune · 01 Jan 2026. *Cases reported Jan 2023–Jan 2026.</p>
     </ExecutiveShell>
   );
 }
