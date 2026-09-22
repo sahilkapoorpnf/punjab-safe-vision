@@ -16,11 +16,9 @@ export default function ExecutiveMission() {
               ठाकुर सुखविंदर सिंह सुक्खू · Chief Minister
             </figcaption>
           </div>
-          <h2 className="mt-6 text-center text-2xl font-black leading-tight md:text-3xl">
+          <h2 className="mt-6 text-center text-xl font-black leading-tight md:text-2xl">
             <span className="bg-gradient-to-r from-gold via-foreground to-success bg-clip-text text-transparent">
-              मुझे अपना प्रदेश बचाना है,
-              <br />
-              इसे नशा मुक्त बनाना है।
+              नशा मुक्त हिमाचल — यह हमारा संकल्प है।
             </span>
           </h2>
         </figure>
