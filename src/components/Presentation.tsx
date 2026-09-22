@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button";
 import ExecutiveMission from "./slides/ExecutiveMission";
 import ExecutiveScale from "./slides/ExecutiveScale";
 import ExecutiveEvidence from "./slides/ExecutiveEvidence";
-import ExecutiveResponse from "./slides/ExecutiveResponse";
-import ExecutiveEcosystem from "./slides/ExecutiveEcosystem";
-import ExecutiveSolution from "./slides/ExecutiveSolution";
+import ExecutiveGovernmentAction from "./slides/ExecutiveGovernmentAction";
+import ExecutiveGovernmentMomentum from "./slides/ExecutiveGovernmentMomentum";
 import ExecutiveCommand from "./slides/ExecutiveCommand";
-import ExecutiveHumanJourney from "./slides/ExecutiveHumanJourney";
 import ExecutiveTransition from "./slides/ExecutiveTransition";
 import SlideTitleCover from "./slides/SlideTitleCover";
 import SlideProblem from "./slides/SlideProblem";
@@ -37,11 +35,9 @@ const slides = [
   ExecutiveMission,
   ExecutiveScale,
   ExecutiveEvidence,
-  ExecutiveResponse,
-  ExecutiveEcosystem,
-  ExecutiveSolution,
+  ExecutiveGovernmentAction,
+  ExecutiveGovernmentMomentum,
   ExecutiveCommand,
-  ExecutiveHumanJourney,
   ExecutiveTransition,
   SlideTitleCover,
   SlideProblem,
