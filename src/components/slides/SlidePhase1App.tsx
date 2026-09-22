@@ -5,7 +5,7 @@ import himachalMap from "@/assets/executive-intro/himachal-map.png";
 
 function IPhoneFrame({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative h-[470px] w-[220px] shrink-0 rounded-[2.8rem] border-[3px] border-foreground/80 bg-foreground p-[7px] shadow-2xl">
+    <div className="relative h-[420px] w-[196px] shrink-0 rounded-[2.8rem] border-[3px] border-foreground/80 bg-foreground p-[7px] shadow-2xl md:h-[470px] md:w-[220px]">
       <span className="absolute -left-[5px] top-24 h-10 w-[3px] rounded-l bg-foreground/70" />
       <span className="absolute -left-[5px] top-36 h-16 w-[3px] rounded-l bg-foreground/70" />
       <span className="absolute -right-[5px] top-32 h-20 w-[3px] rounded-r bg-foreground/70" />
@@ -24,7 +24,7 @@ function IPhoneFrame({ children }: { children: React.ReactNode }) {
 
 export default function SlidePhase1App() {
   return (
-    <SlideLayout className="relative overflow-hidden bg-card !py-10">
+    <SlideLayout className="relative max-h-screen overflow-y-auto bg-card !py-10">
       <div className="absolute inset-0 grid-pattern" />
       <img src={himachalMap} alt="" className="pointer-events-none absolute -right-24 top-16 w-[34rem] opacity-[0.045] grayscale" />
       <img src="/favicon.png" alt="" className="pointer-events-none absolute -left-20 bottom-14 w-80 opacity-[0.035] grayscale" />
@@ -71,6 +71,7 @@ export default function SlidePhase1App() {
               </div>
             </IPhoneFrame>
 
+            <div className="hidden md:block">
             <IPhoneFrame>
               <div className="flex h-full flex-col bg-background px-4 pb-5 pt-10">
                 <div className="mb-3 flex items-center gap-2">
@@ -98,6 +99,7 @@ export default function SlidePhase1App() {
                 </div>
               </div>
             </IPhoneFrame>
+            </div>
           </div>
 
           <div className="space-y-4 border-l border-border pl-7">
