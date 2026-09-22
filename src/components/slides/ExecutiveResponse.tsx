@@ -1,16 +1,16 @@
 import { Building2, HandHeart, Landmark, Shield } from "lucide-react";
 import ExecutiveShell from "./ExecutiveShell";
 import SourceLink from "./SourceLink";
-import stf from "@/assets/cm-intro/news-stf-crop.jpg.asset.json";
-import seizure from "@/assets/executive-intro/challenge-seizure.png.asset.json";
-import community from "@/assets/executive-intro/response-community.png.asset.json";
-import rehab from "@/assets/executive-intro/response-rehab.png.asset.json";
+import stf from "@/assets/cm-intro/news-stf-crop.jpg";
+import seizure from "@/assets/executive-intro/challenge-seizure.png";
+import community from "@/assets/executive-intro/response-community.png";
+import rehab from "@/assets/executive-intro/response-rehab.png";
 
 const actions = [
-  { icon: Shield, title: "STF", text: "Special Task Force against drug abuse & organised crime", date: "15 JAN 2025", source: "HP GOVERNMENT", image: stf.url, href: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=38128&Language=1" },
-  { icon: Landmark, title: "ENFORCEMENT", text: "Drug-linked assets and traffickers targeted", date: "17 DEC 2025", source: "THE HINDU", image: seizure.url, href: "https://www.thehindu.com/news/national/himachal-pradesh/50-crore-in-assets-seized-under-ndps-act-four-times-bjp-tenure-figure-himachal-cm-sukhu/article70403736.ece" },
-  { icon: Building2, title: "COMMUNITY", text: "Panchayat-level anti-chitta mobilisation", date: "15 DEC 2025", source: "HP GOVERNMENT", image: community.url, href: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=44107&Language=1" },
-  { icon: HandHeart, title: "REHABILITATION", text: "Expansion of de-addiction infrastructure", date: "08 JUN 2026", source: "THE TRIBUNE", image: rehab.url, href: "https://www.tribuneindia.com/news/himachal/himachal-gets-first-women-de-addiction-centre-in-mashobra/" },
+  { icon: Shield, title: "STF", text: "Special Task Force against drug abuse & organised crime", date: "15 JAN 2025", source: "HP GOVERNMENT", image: stf, href: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=38128&Language=1" },
+  { icon: Landmark, title: "ENFORCEMENT", text: "Drug-linked assets and traffickers targeted", date: "17 DEC 2025", source: "THE HINDU", image: seizure, href: "https://www.thehindu.com/news/national/himachal-pradesh/50-crore-in-assets-seized-under-ndps-act-four-times-bjp-tenure-figure-himachal-cm-sukhu/article70403736.ece" },
+  { icon: Building2, title: "COMMUNITY", text: "Panchayat-level anti-chitta mobilisation", date: "15 DEC 2025", source: "HP GOVERNMENT", image: community, href: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=44107&Language=1" },
+  { icon: HandHeart, title: "REHABILITATION", text: "Expansion of de-addiction infrastructure", date: "08 JUN 2026", source: "THE TRIBUNE", image: rehab, href: "https://www.tribuneindia.com/news/himachal/himachal-gets-first-women-de-addiction-centre-in-mashobra/" },
 ];
 
 export default function ExecutiveResponse() {

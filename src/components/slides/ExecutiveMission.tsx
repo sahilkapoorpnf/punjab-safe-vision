@@ -1,13 +1,13 @@
 import { MapPinned } from "lucide-react";
 import ExecutiveShell from "./ExecutiveShell";
 import SourceLink from "./SourceLink";
-import cmPhoto from "@/assets/cm-intro/cm-sukhu-walkathon.jpg.asset.json";
+import cmPhoto from "@/assets/cm-intro/cm-sukhu-walkathon.jpg";
 import himachalMap from "@/assets/hero-himachal-map.jpg";
 
 export default function ExecutiveMission() {
   return (
     <ExecutiveShell dark className="flex items-end">
-      <img src={cmPhoto.url} alt="Chief Minister Sukhvinder Singh Sukhu at the Hamirpur anti-chitta walkathon" className="absolute inset-0 h-full w-full object-cover object-center" />
+      <img src={cmPhoto} alt="Chief Minister Sukhvinder Singh Sukhu at the Hamirpur anti-chitta walkathon" className="absolute inset-0 h-full w-full object-cover object-center" />
       <img src={himachalMap} alt="" className="absolute inset-0 h-full w-full object-cover opacity-10 mix-blend-screen" />
       <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/80 to-navy/10" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/25" />

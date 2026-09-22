@@ -1,13 +1,13 @@
 import ExecutiveShell from "./ExecutiveShell";
 import SourceLink from "./SourceLink";
-import cases from "@/assets/executive-intro/challenge-cases.png.asset.json";
-import seizure from "@/assets/executive-intro/challenge-seizure.png.asset.json";
-import deaths from "@/assets/executive-intro/challenge-deaths.png.asset.json";
+import cases from "@/assets/executive-intro/challenge-cases.png";
+import seizure from "@/assets/executive-intro/challenge-seizure.png";
+import deaths from "@/assets/executive-intro/challenge-deaths.png";
 
 const items = [
-  { image: cases.url, source: "THE TRIBUNE", date: "01 JAN 2026", caption: "Case registrations rose in 2025", href: "https://www.tribuneindia.com/news/himachal/as-cases-rise-28-govt-launches-decisive-battle-against-narcotics/" },
-  { image: seizure.url, source: "THE HINDU", date: "17 DEC 2025", caption: "Drug-linked assets targeted statewide", href: "https://www.thehindu.com/news/national/himachal-pradesh/50-crore-in-assets-seized-under-ndps-act-four-times-bjp-tenure-figure-himachal-cm-sukhu/article70403736.ece" },
-  { image: deaths.url, source: "THE TRIBUNE", date: "25 MAR 2026", caption: "Overdose deaths reported to Assembly", href: "https://www.tribuneindia.com/news/himachal/66-drug-overdose-deaths-in-3-years-6200-cases-lodged-himachal-cm-sukhu/" },
+  { image: cases, source: "THE TRIBUNE", date: "01 JAN 2026", caption: "Case registrations rose in 2025", href: "https://www.tribuneindia.com/news/himachal/as-cases-rise-28-govt-launches-decisive-battle-against-narcotics/" },
+  { image: seizure, source: "THE HINDU", date: "17 DEC 2025", caption: "Drug-linked assets targeted statewide", href: "https://www.thehindu.com/news/national/himachal-pradesh/50-crore-in-assets-seized-under-ndps-act-four-times-bjp-tenure-figure-himachal-cm-sukhu/article70403736.ece" },
+  { image: deaths, source: "THE TRIBUNE", date: "25 MAR 2026", caption: "Overdose deaths reported to Assembly", href: "https://www.tribuneindia.com/news/himachal/66-drug-overdose-deaths-in-3-years-6200-cases-lodged-himachal-cm-sukhu/" },
 ];
 
 export default function ExecutiveEvidence() {
