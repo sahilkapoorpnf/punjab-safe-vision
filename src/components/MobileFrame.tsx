@@ -10,6 +10,8 @@ interface MobileFrameProps {
 /**
  * MobileFrame — renders children inside an iPhone 16 Pro Max style
  * titanium chassis so every citizen-app screen looks like a real device.
+ * Proportions follow the 16 Pro Max: 6.9" display, ultra-thin bezels,
+ * Dynamic Island, grade-5 titanium band with action/volume buttons.
  */
 export default function MobileFrame({ children, caption }: MobileFrameProps) {
   return (
@@ -21,24 +23,26 @@ export default function MobileFrame({ children, caption }: MobileFrameProps) {
 
       {/* iPhone 16 Pro Max chassis */}
       <div className="relative z-10">
-        <div className="relative mx-auto w-[392px] max-w-[95vw] rounded-[3.4rem] bg-gradient-to-b from-neutral-500 via-neutral-800 to-neutral-600 p-[3px] shadow-[0_50px_90px_-20px_rgba(0,0,0,0.7)]">
-          {/* Titanium side buttons */}
-          <div className="absolute -left-[3px] top-28 w-[3px] h-9 rounded-l bg-neutral-400/80" />
-          <div className="absolute -left-[3px] top-44 w-[3px] h-14 rounded-l bg-neutral-400/80" />
-          <div className="absolute -left-[3px] top-64 w-[3px] h-14 rounded-l bg-neutral-400/80" />
-          <div className="absolute -right-[3px] top-52 w-[3px] h-20 rounded-r bg-neutral-400/80" />
+        <div className="relative mx-auto w-[400px] max-w-[95vw] rounded-[3.6rem] bg-gradient-to-b from-neutral-400 via-neutral-700 to-neutral-500 p-[2.5px] shadow-[0_60px_100px_-20px_rgba(0,0,0,0.75)] ring-1 ring-white/10">
+          {/* Titanium side buttons — action, volume up/down (left), power (right) */}
+          <div className="absolute -left-[2.5px] top-[104px] w-[3px] h-7 rounded-l-md bg-gradient-to-b from-neutral-300 to-neutral-500" />
+          <div className="absolute -left-[2.5px] top-[150px] w-[3px] h-12 rounded-l-md bg-gradient-to-b from-neutral-300 to-neutral-500" />
+          <div className="absolute -left-[2.5px] top-[212px] w-[3px] h-12 rounded-l-md bg-gradient-to-b from-neutral-300 to-neutral-500" />
+          <div className="absolute -right-[2.5px] top-[170px] w-[3px] h-16 rounded-r-md bg-gradient-to-b from-neutral-300 to-neutral-500" />
+          {/* Camera Control button (16 Pro) */}
+          <div className="absolute -right-[2.5px] top-[260px] w-[3px] h-9 rounded-r-md bg-neutral-500/80" />
 
-          <div className="rounded-[3.25rem] bg-black p-[10px]">
-            {/* Screen */}
-            <div className="relative rounded-[2.7rem] overflow-hidden bg-background h-[770px] max-h-[80vh]">
+          <div className="rounded-[3.5rem] bg-black p-[6px]">
+            {/* Screen — 430 x 932 pt ratio (6.9") */}
+            <div className="relative rounded-[3.1rem] overflow-hidden bg-background aspect-[9/19.2] max-h-[82vh]">
               {/* Dynamic Island */}
-              <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-40 h-[26px] w-[104px] rounded-full bg-black flex items-center justify-end pr-2.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-neutral-800 ring-1 ring-neutral-700" />
+              <div className="absolute top-[11px] left-1/2 -translate-x-1/2 z-40 h-[30px] w-[110px] rounded-full bg-black flex items-center justify-end pr-3 shadow-inner">
+                <span className="h-[9px] w-[9px] rounded-full bg-[#1a2a44] ring-1 ring-black" />
               </div>
 
               {/* Status bar */}
-              <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-7 pt-3.5 text-[11px] font-semibold text-foreground pointer-events-none">
-                <span>
+              <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-8 pt-4 text-[11px] font-semibold text-foreground pointer-events-none">
+                <span className="tracking-wide">
                   {new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false })}
                 </span>
                 <span className="flex items-center gap-1.5">
@@ -49,12 +53,12 @@ export default function MobileFrame({ children, caption }: MobileFrameProps) {
               </div>
 
               {/* Scrollable screen content */}
-              <div className="absolute inset-0 overflow-y-auto pt-11">
+              <div className="absolute inset-0 overflow-y-auto pt-12">
                 {children}
               </div>
 
               {/* Home indicator */}
-              <div className="absolute bottom-2 left-1/2 z-40 h-1 w-32 -translate-x-1/2 rounded-full bg-foreground/70" />
+              <div className="absolute bottom-2 left-1/2 z-40 h-[5px] w-[130px] -translate-x-1/2 rounded-full bg-foreground/70" />
             </div>
           </div>
         </div>
