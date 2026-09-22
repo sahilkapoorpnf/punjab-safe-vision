@@ -104,11 +104,11 @@ export default function CitizenLogin() {
 
           <div className="flex items-center justify-center gap-2 mt-5 opacity-80">
             <img src={bitdecentroLogo} alt="BitDecentro" className="h-4" />
-            <span className="text-[10px] text-primary-foreground">Powered by BitDecentro</span>
+            <span className="text-[10px] text-muted-foreground">Powered by BitDecentro</span>
           </div>
 
           <div className="text-center mt-3">
-            <Link to="/" className="text-[10px] text-primary-foreground/80 hover:underline">← Back to Presentation</Link>
+            <Link to="/" className="text-[10px] text-muted-foreground hover:underline">← Back to Presentation</Link>
           </div>
         </div>
       </div>
