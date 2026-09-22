@@ -86,8 +86,12 @@ export default function CitizenLogin() {
               ))}
             </div>
 
-            <Button onClick={enterAnonymously} className="w-full" size="lg">
-              <Send className="w-4 h-4 mr-2" /> गुप्त सूचना दें · Continue Anonymously
+            <Button onClick={enterAnonymously} className="w-full h-auto py-3 whitespace-normal leading-tight" size="lg">
+              <Send className="w-4 h-4 mr-2 shrink-0" />
+              <span className="flex flex-col items-start">
+                <span className="text-sm font-bold">गुप्त सूचना दें</span>
+                <span className="text-[10px] font-medium opacity-80">Continue Anonymously</span>
+              </span>
             </Button>
 
             <p className="text-[9px] text-center text-muted-foreground mt-3">
