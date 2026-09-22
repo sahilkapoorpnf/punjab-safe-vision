@@ -87,7 +87,7 @@ export default function CitizenLogin() {
             </div>
 
             <Button onClick={enterAnonymously} className="w-full" size="lg">
-              Continue Anonymously →
+              <Send className="w-4 h-4 mr-2" /> गुप्त सूचना दें · Continue Anonymously
             </Button>
 
             <p className="text-[9px] text-center text-muted-foreground mt-3">
