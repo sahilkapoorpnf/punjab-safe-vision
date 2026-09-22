@@ -1,14 +1,14 @@
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import SlideLayout from "./SlideLayout";
 import SourceLink from "./SourceLink";
-import cmWalkathon from "@/assets/cm-intro/cm-sukhu-walkathon.jpg";
+import cmWalkathon from "@/assets/cm-intro/cm-sukhu-walkathon.jpg.asset.json";
 
 const SOURCE = "https://indianexpress.com/article/cities/chandigarh/hamirpur-cm-sukhu-leads-anti-chitta-walkathon-says-will-wipe-out-network-10424518/";
 
 export default function SlideSukhuVision() {
   return (
     <SlideLayout dark className="relative flex items-end overflow-hidden bg-navy">
-      <img src={cmWalkathon} alt="Chief Minister Sukhvinder Singh Sukhu leading an anti-chitta public pledge in Hamirpur" className="absolute inset-0 h-full w-full object-cover object-center" />
+      <img src={cmWalkathon.url} alt="Chief Minister Sukhvinder Singh Sukhu leading an anti-chitta public pledge in Hamirpur" className="absolute inset-0 h-full w-full object-cover object-center" />
       <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/20" />
 

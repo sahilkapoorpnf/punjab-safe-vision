@@ -1,8 +1,8 @@
 import SlideLayout from "./SlideLayout";
 import SourceLink from "./SourceLink";
-import stfRelease from "@/assets/cm-intro/news-stf-crop.jpg";
-import zeroToleranceRelease from "@/assets/cm-intro/news-zero-tolerance-crop.jpg";
-import modernisationRelease from "@/assets/cm-intro/news-modernisation-crop.jpg";
+import stfRelease from "@/assets/cm-intro/news-stf-crop.jpg.asset.json";
+import zeroToleranceRelease from "@/assets/cm-intro/news-zero-tolerance-crop.jpg.asset.json";
+import modernisationRelease from "@/assets/cm-intro/news-modernisation-crop.jpg.asset.json";
 
 const evidence = [
   { image: stfRelease, date: "15 JAN 2025", title: "Special Task Force", source: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=38128&Language=1" },

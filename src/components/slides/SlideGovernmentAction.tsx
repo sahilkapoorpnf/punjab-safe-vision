@@ -1,7 +1,7 @@
 import { CarFront, Gavel, HeartHandshake, Network, ShieldCheck } from "lucide-react";
 import SlideLayout from "./SlideLayout";
 import SourceLink from "./SourceLink";
-import cmSocial from "@/assets/cm-intro/cm-sukhu-social.jpg";
+import cmSocial from "@/assets/cm-intro/cm-sukhu-social.jpg.asset.json";
 
 const milestones = [
   { date: "SEP 2024", icon: HeartHandshake, title: "Nasha Mukt Himachal Abhiyan", text: "Prevention, early identification और rehabilitation का three-pillar mission.", source: "http://himachalpr.gov.in/OnePressRelease.aspx?ID=36235&Language=1" },
@@ -22,7 +22,7 @@ export default function SlideGovernmentAction() {
             <h2 className="slide-title mt-3 text-4xl md:text-5xl">नीति से मैदान तक — a clear action chain</h2>
             <p className="mt-2 text-muted-foreground">Government ने enforcement, prevention, accountability और technology — चारों fronts पर कदम बढ़ाए.</p>
           </div>
-          <img src={cmSocial} alt="Chief Minister Sukhu speaking during the anti-chitta campaign" className="hidden h-32 w-full rounded-lg object-cover object-top shadow-lg md:block" />
+          <img src={cmSocial.url} alt="Chief Minister Sukhu speaking during the anti-chitta campaign" className="hidden h-32 w-full rounded-lg object-cover object-top shadow-lg md:block" />
         </div>
 
         <div className="relative grid gap-3 md:grid-cols-5">
