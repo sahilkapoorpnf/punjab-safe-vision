@@ -1,9 +1,11 @@
 import { useNavigate, Link } from "react-router-dom";
-import { Shield, EyeOff, Lock, MapPin } from "lucide-react";
+import { Shield, EyeOff, Lock, MapPin, ShieldCheck, Send } from "lucide-react";
 import { setUser, seedIfEmpty } from "@/lib/nashaStore";
 import { Button } from "@/components/ui/button";
 import bitdecentroLogo from "@/assets/bitdecentro-logo.png";
 import MobileFrame from "@/components/MobileFrame";
+import sukhuPortrait from "@/assets/executive-intro/cm-sukhu-citizen-app.jpg";
+import himachalMap from "@/assets/executive-intro/himachal-map.png";
 
 export default function CitizenLogin() {
   const nav = useNavigate();
