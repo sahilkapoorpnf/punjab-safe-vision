@@ -5,7 +5,7 @@ export default function ExecutiveMission() {
   return (
     <ExecutiveShell className="flex items-center">
       <div className="grid w-full gap-8 md:grid-cols-[.85fr_1.15fr] md:items-center">
-        <figure className="mx-auto w-full max-w-sm">
+        <figure className="mx-auto w-full max-w-[210px] sm:max-w-xs md:max-w-sm">
           <div className="relative overflow-hidden rounded-sm border border-border shadow-xl">
             <img
               src={cmPortrait}
