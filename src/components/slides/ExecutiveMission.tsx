@@ -1,25 +1,21 @@
-import { MapPinned } from "lucide-react";
 import ExecutiveShell from "./ExecutiveShell";
-import SourceLink from "./SourceLink";
-import cmPhoto from "@/assets/cm-intro/cm-sukhu-walkathon.jpg";
-import himachalMap from "@/assets/hero-himachal-map.jpg";
+import cmPhoto from "@/assets/executive-intro/cm-sukhu-rehab.jpg";
 
 export default function ExecutiveMission() {
   return (
-    <ExecutiveShell dark className="flex items-end">
-      <img src={cmPhoto} alt="Chief Minister Sukhvinder Singh Sukhu at the Hamirpur anti-chitta walkathon" className="absolute inset-0 h-full w-full object-cover object-center" />
-      <img src={himachalMap} alt="" className="absolute inset-0 h-full w-full object-cover opacity-10 mix-blend-screen" />
-      <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/80 to-navy/10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/25" />
-      <div className="relative z-10 max-w-4xl pb-4 md:pb-10">
-        <div className="mb-5 flex items-center gap-3 text-xs font-bold uppercase text-primary-foreground/75">
-          <MapPinned className="h-5 w-5 text-accent" /> Government of Himachal Pradesh
+    <ExecutiveShell className="flex items-center">
+      <div className="grid w-full gap-7 md:grid-cols-[.82fr_1.18fr] md:items-center">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-accent">मुख्यमंत्री का संकल्प · Mission</p>
+          <h1 className="slide-title mt-4 text-5xl uppercase leading-[.95] md:text-7xl">Chitta-Free<br />Himachal</h1>
+          <div className="my-6 h-1 w-24 bg-accent" />
+          <p className="text-xl font-black leading-snug md:text-3xl">नशा मुक्त हिमाचल<br /><span className="text-muted-foreground">Enforcement से Recovery तक</span></p>
+          <p className="mt-8 max-w-sm text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-muted-foreground md:text-xs md:tracking-[0.16em]">Thakur Sukhvinder Singh Sukhu · Chief Minister</p>
         </div>
-        <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground/70">Sukhvinder Singh Sukhu · Chief Minister</p>
-        <h1 className="slide-title mt-3 text-5xl uppercase leading-none md:text-8xl">Chitta-Free<br />Himachal</h1>
-        <p className="mt-5 max-w-3xl text-lg font-semibold md:text-2xl">From enforcement to prevention, rehabilitation and community action.</p>
-        <div className="mt-7 border-l-2 border-accent pl-4 text-sm text-primary-foreground/75">Government-led statewide campaign against drug abuse and trafficking.</div>
-        <div className="mt-5"><SourceLink dark href="https://indianexpress.com/article/cities/chandigarh/hamirpur-cm-sukhu-leads-anti-chitta-walkathon-says-will-wipe-out-network-10424518/">Indian Express / PTI · 17 Dec 2025</SourceLink></div>
+        <figure className="relative overflow-hidden border-b-8 border-accent shadow-xl">
+          <img src={cmPhoto} alt="Chief Minister Sukhvinder Singh Sukhu inaugurating the Nav Jeevan women's rehabilitation centre" className="aspect-[4/3] w-full object-cover" />
+          <figcaption className="absolute inset-x-0 bottom-0 bg-card/90 px-4 py-3 text-[10px] font-bold">Authentic public photograph · The Tribune · 08 Jun 2026</figcaption>
+        </figure>
       </div>
     </ExecutiveShell>
   );
