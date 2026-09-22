@@ -2,7 +2,6 @@ import { Camera, MapPin, Send, ShieldCheck, Signal, Wifi, BatteryFull } from "lu
 import SlideLayout from "./SlideLayout";
 import sukhuPortrait from "@/assets/executive-intro/cm-sukhu-citizen-app.jpg";
 import himachalMap from "@/assets/executive-intro/himachal-map.png";
-import congressHand from "@/assets/brand/congress-hand.webp.asset.json";
 
 function IPhoneFrame({ children }: { children: React.ReactNode }) {
   return (
@@ -28,7 +27,7 @@ export default function SlidePhase1App() {
     <SlideLayout className="relative overflow-hidden bg-card !py-10">
       <div className="absolute inset-0 grid-pattern" />
       <img src={himachalMap} alt="" className="pointer-events-none absolute -right-24 top-16 w-[34rem] opacity-[0.045] grayscale" />
-      <img src={congressHand.url} alt="" className="pointer-events-none absolute -left-20 bottom-14 w-80 opacity-[0.035] grayscale" />
+      <img src="/favicon.png" alt="" className="pointer-events-none absolute -left-20 bottom-14 w-80 opacity-[0.035] grayscale" />
 
       <div className="relative z-10 space-y-5">
         <div className="flex items-end justify-between gap-6 border-b border-border pb-4">
@@ -47,8 +46,10 @@ export default function SlidePhase1App() {
             <IPhoneFrame>
               <div className="relative flex h-full flex-col overflow-hidden bg-card pt-8">
                 <img src={himachalMap} alt="" className="absolute -right-10 top-10 w-52 opacity-[0.08] grayscale" />
-                <div className="absolute right-3 top-10 z-10 h-10 w-10 rounded-full border border-border bg-card/90 p-2 shadow-sm">
-                  <img src={congressHand.url} alt="Congress hand symbol" className="h-full w-full object-contain" />
+                <div className="absolute right-3 top-11 z-10 h-8 w-12 overflow-hidden rounded border border-border bg-card shadow-sm" aria-label="Congress flag">
+                  <span className="absolute inset-x-0 top-0 h-2.5 bg-gold" />
+                  <span className="absolute inset-x-0 bottom-0 h-2.5 bg-success" />
+                  <img src="/favicon.png" alt="Congress hand symbol" className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 object-contain" />
                 </div>
                 <div className="relative mx-3 mt-2 h-[245px] overflow-hidden rounded-2xl bg-secondary">
                   <img src={sukhuPortrait} alt="Chief Minister Sukhvinder Singh Sukhu" className="h-full w-full object-cover object-top" />
