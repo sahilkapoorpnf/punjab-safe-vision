@@ -2,11 +2,15 @@ import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, PresentationIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import SlideSukhuVision from "./slides/SlideSukhuVision";
-import SlideGovernmentAction from "./slides/SlideGovernmentAction";
-import SlideResultsScorecard from "./slides/SlideResultsScorecard";
-import SlideNewsEvidence from "./slides/SlideNewsEvidence";
-import SlideDigitalBridge from "./slides/SlideDigitalBridge";
+import ExecutiveMission from "./slides/ExecutiveMission";
+import ExecutiveScale from "./slides/ExecutiveScale";
+import ExecutiveEvidence from "./slides/ExecutiveEvidence";
+import ExecutiveResponse from "./slides/ExecutiveResponse";
+import ExecutiveEcosystem from "./slides/ExecutiveEcosystem";
+import ExecutiveSolution from "./slides/ExecutiveSolution";
+import ExecutiveCommand from "./slides/ExecutiveCommand";
+import ExecutiveHumanJourney from "./slides/ExecutiveHumanJourney";
+import ExecutiveTransition from "./slides/ExecutiveTransition";
 import SlideTitleCover from "./slides/SlideTitleCover";
 import SlideProblem from "./slides/SlideProblem";
 import SlideProblem2 from "./slides/SlideProblem2";
@@ -30,11 +34,15 @@ import SlideCommercial from "./slides/SlideCommercial";
 import SlideClosing from "./slides/SlideClosing";
 
 const slides = [
-  SlideSukhuVision,
-  SlideGovernmentAction,
-  SlideResultsScorecard,
-  SlideNewsEvidence,
-  SlideDigitalBridge,
+  ExecutiveMission,
+  ExecutiveScale,
+  ExecutiveEvidence,
+  ExecutiveResponse,
+  ExecutiveEcosystem,
+  ExecutiveSolution,
+  ExecutiveCommand,
+  ExecutiveHumanJourney,
+  ExecutiveTransition,
   SlideTitleCover,
   SlideProblem,
   SlideProblem2,
