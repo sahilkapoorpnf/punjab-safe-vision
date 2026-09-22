@@ -35,6 +35,7 @@ export default function SlideResultsScorecard() {
           <p className="max-w-3xl text-primary-foreground/65"><strong className="text-primary-foreground">Reading note:</strong> ₹46 Cr (1 Dec) and ₹50 Cr+ (17 Dec) are evolving cumulative CM statements; they are not added together.</p>
           <div className="flex flex-wrap gap-4">
             <SourceLink dark href="https://www.thehindu.com/news/national/himachal-pradesh/50-crore-in-assets-seized-under-ndps-act-four-times-bjp-tenure-figure-himachal-cm-sukhu/article70403736.ece">The Hindu · 17 Dec 2025</SourceLink>
+            <SourceLink dark href="http://himachalpr.gov.in/OneNews.aspx?ID=43940&Language=1">HP Govt · 2 Dec 2025</SourceLink>
             <SourceLink dark href="https://timesofindia.indiatimes.com/city/chandigarh/himachal-pradesh-police-arrested-2515-accused-under-ndps-act-in-2024/articleshow/118459850.cms">TOI · 21 Feb 2025</SourceLink>
           </div>
         </div>
