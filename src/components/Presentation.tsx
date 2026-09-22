@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, PresentationIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import SlideSukhuVision from "./slides/SlideSukhuVision";
+import SlideGovernmentAction from "./slides/SlideGovernmentAction";
+import SlideResultsScorecard from "./slides/SlideResultsScorecard";
+import SlideNewsEvidence from "./slides/SlideNewsEvidence";
+import SlideDigitalBridge from "./slides/SlideDigitalBridge";
 import SlideTitleCover from "./slides/SlideTitleCover";
 import SlideProblem from "./slides/SlideProblem";
 import SlideProblem2 from "./slides/SlideProblem2";
@@ -24,6 +30,11 @@ import SlideCommercial from "./slides/SlideCommercial";
 import SlideClosing from "./slides/SlideClosing";
 
 const slides = [
+  SlideSukhuVision,
+  SlideGovernmentAction,
+  SlideResultsScorecard,
+  SlideNewsEvidence,
+  SlideDigitalBridge,
   SlideTitleCover,
   SlideProblem,
   SlideProblem2,
@@ -48,11 +59,35 @@ const slides = [
 ];
 
 export default function Presentation() {
-  const [current, setCurrent] = useState(0);
-
-  const goTo = (i: number) => {
-    if (i >= 0 && i < slides.length) setCurrent(i);
+  const getInitialSlide = () => {
+    const value = Number(new URLSearchParams(window.location.search).get("slide"));
+    return Number.isInteger(value) && value >= 1 && value <= slides.length ? value - 1 : 0;
   };
+
+  const [current, setCurrent] = useState(getInitialSlide);
+
+  const goTo = useCallback((i: number) => {
+    if (i < 0 || i >= slides.length) return;
+    setCurrent(i);
+    const url = new URL(window.location.href);
+    url.searchParams.set("slide", String(i + 1));
+    window.history.replaceState({}, "", url);
+  }, []);
+
+  useEffect(() => {
+    document.title = `${current + 1}/${slides.length} — NashaMukt Himachal`;
+  }, [current]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight" || event.key === " ") goTo(current + 1);
+      if (event.key === "ArrowLeft") goTo(current - 1);
+      if (event.key === "Home") goTo(0);
+      if (event.key === "End") goTo(slides.length - 1);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [current, goTo]);
 
   const SlideComponent = slides[current];
 
@@ -76,35 +111,42 @@ export default function Presentation() {
       {/* Bottom navigation bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-md border-t border-border">
         <div className="max-w-4xl mx-auto flex items-center justify-between px-6 py-3">
-          <button
+          <Button
+            variant="ghost"
             onClick={() => goTo(current - 1)}
             disabled={current === 0}
-            className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium text-sm transition-all disabled:opacity-30 hover:bg-secondary text-foreground"
+            className="gap-1"
           >
             <ChevronLeft className="w-4 h-4" /> Previous
-          </button>
+          </Button>
 
-          <div className="flex items-center gap-1.5">
+          <div className="hidden max-w-[55vw] items-center gap-1.5 overflow-hidden sm:flex">
             {slides.map((_, i) => (
-              <button
+              <Button
                 key={i}
+                variant="ghost"
+                size="icon"
                 onClick={() => goTo(i)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  i === current
-                    ? "bg-primary scale-125"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                }`}
-              />
+                aria-label={`Go to slide ${i + 1}`}
+                className="h-5 w-5 shrink-0 rounded-full p-0"
+              >
+                <span className={`block h-2.5 w-2.5 rounded-full transition-all ${i === current ? "bg-primary scale-125" : "bg-muted-foreground/30"}`} />
+              </Button>
             ))}
           </div>
 
-          <button
+          <div className="flex items-center gap-1 text-xs font-bold text-muted-foreground sm:hidden">
+            <PresentationIcon className="h-4 w-4" /> {current + 1} / {slides.length}
+          </div>
+
+          <Button
+            variant="ghost"
             onClick={() => goTo(current + 1)}
             disabled={current === slides.length - 1}
-            className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium text-sm transition-all disabled:opacity-30 hover:bg-secondary text-foreground"
+            className="gap-1"
           >
             Next <ChevronRight className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
         <div className="text-center pb-2 text-xs text-muted-foreground">
           {current + 1} / {slides.length}
