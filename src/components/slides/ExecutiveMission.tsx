@@ -10,7 +10,7 @@ export default function ExecutiveMission() {
           <h1 className="slide-title mt-4 text-5xl uppercase leading-[.95] md:text-7xl">Chitta-Free<br />Himachal</h1>
           <div className="my-6 h-1 w-24 bg-accent" />
           <p className="text-xl font-black leading-snug md:text-3xl">नशा मुक्त हिमाचल<br /><span className="text-muted-foreground">Enforcement से Recovery तक</span></p>
-          <p className="mt-8 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">Thakur Sukhvinder Singh Sukhu · Chief Minister</p>
+          <p className="mt-8 max-w-sm text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-muted-foreground md:text-xs md:tracking-[0.16em]">Thakur Sukhvinder Singh Sukhu · Chief Minister</p>
         </div>
         <figure className="relative overflow-hidden border-b-8 border-accent shadow-xl">
           <img src={cmPhoto} alt="Chief Minister Sukhvinder Singh Sukhu inaugurating the Nav Jeevan women's rehabilitation centre" className="aspect-[4/3] w-full object-cover" />
