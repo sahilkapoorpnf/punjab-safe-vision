@@ -1,5 +1,5 @@
 import ExecutiveShell from "./ExecutiveShell";
-import cmPortrait from "@/assets/executive-intro/cm-sukhu-portrait.avif.asset.json";
+import cmPortrait from "@/assets/executive-intro/cm-sukhu-portrait.jpg";
 
 export default function ExecutiveMission() {
   return (
@@ -8,7 +8,7 @@ export default function ExecutiveMission() {
         <figure className="mx-auto w-full max-w-sm">
           <div className="relative overflow-hidden rounded-sm border border-border shadow-xl">
             <img
-              src={cmPortrait.url}
+              src={cmPortrait}
               alt="मुख्यमंत्री ठाकुर सुखविंदर सिंह सुक्खू"
               className="aspect-[2/3] w-full object-cover"
             />
