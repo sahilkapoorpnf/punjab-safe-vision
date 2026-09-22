@@ -3,12 +3,11 @@ import congressMark from "@/assets/brand/congress-hand.webp.asset.json";
 
 interface ExecutiveShellProps {
   children: ReactNode;
-  dark?: boolean;
   eyebrow?: string;
   className?: string;
 }
 
-export default function ExecutiveShell({ children, dark = false, eyebrow, className = "" }: ExecutiveShellProps) {
+export default function ExecutiveShell({ children, eyebrow, className = "" }: ExecutiveShellProps) {
   return (
     <section className={`relative min-h-screen overflow-hidden bg-card px-6 pb-32 pt-12 text-foreground md:px-16 lg:px-24 ${className}`}>
       <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-gold via-card to-success" />
