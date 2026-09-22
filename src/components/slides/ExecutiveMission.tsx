@@ -1,14 +1,20 @@
 import ExecutiveShell from "./ExecutiveShell";
 import cmPortrait from "@/assets/executive-intro/cm-sukhu-portrait.jpg";
+import himachalMap from "@/assets/executive-intro/himachal-map.png";
 
 export default function ExecutiveMission() {
   return (
     <ExecutiveShell className="flex items-center">
-      <div className="grid w-full gap-5 md:grid-cols-[.8fr_1.2fr] md:items-center md:gap-12">
-        <figure className="mx-auto w-full max-w-[240px] md:max-w-none">
+      <div className="relative grid w-full gap-4 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-10">
+        <img
+          src={himachalMap}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-20 top-1/2 hidden w-[38rem] -translate-y-1/2 opacity-[0.09] grayscale md:block"
+        />
+        <figure className="relative z-10 mx-auto w-full max-w-[240px] md:max-w-none">
           <div
-            className="relative mx-auto aspect-[2/3] overflow-hidden rounded-sm border border-border shadow-xl"
-            style={{ height: "min(38vh, 430px)", width: "auto" }}
+            className="relative mx-auto h-[34vh] max-h-[300px] aspect-[2/3] overflow-hidden rounded-sm border border-border shadow-xl md:h-[55vh] md:max-h-[440px]"
           >
             <img
               src={cmPortrait}
